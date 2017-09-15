@@ -6,6 +6,7 @@ output:
   html_document: 
     theme: lumen
     toc: yes
+    toc_float: true
     toc_depth: 2
     number_sections: yes
 ---
