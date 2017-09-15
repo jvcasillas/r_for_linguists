@@ -1,8 +1,16 @@
 ---
-output: html_document
+title: 'R for linguists'
+subtitle: ''
+date: "Last updated: `r format(Sys.time(), '%B %d %Y')`"
+output: 
+  html_document: 
+    df_print: tibble
+    theme: yeti
+    toc: yes
+    toc_float: yes
 ---
 
-```{r file-list}
+```{r file-list, echo=FALSE}
 # Store all folders in 'notes' directory
 # Use regex to exclude anything with a '.' 
 # (this gets all folders and excludes files)
@@ -30,13 +38,21 @@ for (i in 1:length(folders)) {
 ```
 
 
-```{r, create-links, results='asis'}
+# Lessons
+
+```{r, create-links, results='asis', echo=FALSE}
 
 # Use for loop to create links to all html files
 for (file in 1:length(folders)) {
   writeLines(paste0("- [", folders[file], "](", children[file], ")"))
 }
 ```
+
+# Links
+
+- another list
+- goes here
+
 
 
 
