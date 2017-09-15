@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SPAN 585</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Joseph V. Casillas, PhD" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="../../../site_libs/assets/css/mySlides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# SPAN 585
+## Statistical inference, t-tests, and the linear model
+### Joseph V. Casillas, PhD
+### Rutgers University | Spring 2017</br>Last update: 02/27/17
+
+---
+
+
+
+
+
+
+
+
+
+class: inverse, middle, center
+
+# Basic statistical inference
+
+---
+background-image: url("../../site_libs/assets/img/pensar2.jpg")
+background-size: 250px
+background-position: 95% 5%
+
+# Hypothesis testing
+
+- Tenemos una pregunta. Queremos saber 'la verdad'.
+
+- Generalmente comparamos dos distribuciones  
+ej. Queremos saber si un grupo se difiere de otro con respecto a algo
+
+- Es decir, postulamos algo acerca de la relación entre las distribuciones
+
+- Lo que postulamos se considera una *alternativa* a la hipótesis *nula*
+	- **Hipótesis nula** (H&lt;sub&gt;0&lt;/sub&gt;): no hay ninguna diferencia entre las 
+	distribuciones
+	- &lt;BLUE&gt;Hipótesis alternativa&lt;/BLUE&gt; (H&lt;sub&gt;1&lt;/sub&gt;): hay una diferencia 
+	entre las distribuciones
+
+- Se determina cuál es el test estadístico apropiado según el tipo de datos
+
+- Después de llevar a cabo el test relevante...
+	- o se rechaza la hipótesis nula si hay suficiente evidencia
+	- o no se rechaza la hipótesis nula (*fail to reject* H&lt;sub&gt;0&lt;/sub&gt;)
+
+---
+background-image: url("../../site_libs/assets/img/confundido.png")
+background-size: 250px
+background-position: 85% 20%
+
+# ¿Qué test estadístico?
+
+- Hay muchos. 
+
+- Como mínimo debéis entender/poder usar:
+	- t-test
+	- regresión lineal
+
+---
+
+# T-test
+
+- Compara dos distribuciones para determinar si son diferentes.
+
+- ¿Qué quiere decir 'diferentes'?
+
+--
+
+- Consideramos que son 'diferentes' si la relación entre ellas se debe a algo que 
+no sea el azar. 
+
+- Normalmente se analiza la probabilidad de que realmente exista una relación.
+
+- El t-test determina si la diferencia entre los promedios es igual a 0
+
+--
+
+&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+---
+
+# T-test
+
+- Hay varios tipos de t-test
+- Nos interesan dos:
+	1. independent samples
+	2. paired samples
+
+--
+
+.pull-left[
+
+### Independent samples
+
+| Name  | group | score |
+| :---- | :---- | :---- |
+| John  | g1    | 250   | 
+| Jane  | g1    | 340   | 
+| Jimmy | g2    | 460   | 
+| Jessy | g2    | 200   | 
+
+]
+
+.pull-right[
+
+### Paired samples
+
+| Name     | Test1 | Test2 |
+| :------- | :---- | :---- |
+| Mike     |  35   | 67    |
+| Melanie  |  50   | 46    |
+| Melissa  |  90   | 86    |
+| Mitchell |  78   | 91    |
+
+]
+
+---
+
+# Independent samples
+
+
+```r
+name1 &lt;- c('John', 'Jane', 'Jimmy', 'Jessy')
+group1 &lt;- c('g1', 'g1', 'g2', 'g2')
+score1 &lt;- c(250, 340, 460, 200)
+ind_samp &lt;- data.frame(name = name1, group = group1, score = score1)
+
+# t-test: # independent 2-group
+t.test(score ~ group, data = ind_samp)
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  score by group
+## t = -0.25442, df = 1.2363, p-value = 0.8349
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1161.468  1091.468
+## sample estimates:
+## mean in group g1 mean in group g2 
+##              295              330
+```
+
+---
+
+# Paired
+
+
+```r
+name2 &lt;- c('Mike', 'Melanie', 'Melissa', 'Mitchell')
+test1 &lt;- c(35, 50, 90, 78)
+test2 &lt;- c(67, 46, 86, 91)
+prd_samp &lt;- data.frame(test1, test2)
+
+# t-test: paired sample
+t.test(test1, test2, paired = TRUE)
+```
+
+```
+## 
+## 	Paired t-test
+## 
+## data:  test1 and test2
+## t = -1.0785, df = 3, p-value = 0.3598
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -36.54539  18.04539
+## sample estimates:
+## mean of the differences 
+##                   -9.25
+```
+
+---
+
+# Paired (alternative syntax)
+
+We can transfrom the dataframe from wide to long. 
+
+
+```r
+name2 &lt;- c('Mike', 'Melanie', 'Melissa', 'Mitchell')
+test1 &lt;- c(35, 50, 90, 78)
+test2 &lt;- c(67, 46, 86, 91)
+prd_samp &lt;- data.frame(test1, test2)
+prd_samp_long &lt;- tidyr::gather(prd_samp, key = test, val = score)
+print(prd_samp_long)
+```
+
+```
+##    test score
+## 1 test1    35
+## 2 test1    50
+## 3 test1    90
+## 4 test1    78
+## 5 test2    67
+## 6 test2    46
+## 7 test2    86
+## 8 test2    91
+```
+
+---
+
+# Paired (alternative syntax)
+
+Same result...
+
+
+```r
+# t-test: paired sample
+t.test(score ~ test, data = prd_samp_long, paired = TRUE)
+```
+
+```
+## 
+## 	Paired t-test
+## 
+## data:  score by test
+## t = -1.0785, df = 3, p-value = 0.3598
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -36.54539  18.04539
+## sample estimates:
+## mean of the differences 
+##                   -9.25
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+class: inverse, center, middle
+
+# The linear model
+
+---
+
+# The linear model
+
+- What it encompasses... a lot. It's everywhere.
+- The linear model allows us to test for a linear 
+relationship between 2 (or more) variables
+- It can be used to (1) quantify the strength of the relationship, 
+or (2) predict
+
+### Some examples
+
+- weight ~ height
+- IQ ~ age
+- RT ~ group
+- F1 ~ vowel
+
+--
+- F1 ~ vowel + group
+- F1 ~ vowel + group + age + height
+
+
+.footnote[`~` = as a function of]
+
+---
+background-image: url("./libs/img/lm_ex1.png")
+background-size: contain
+
+---
+background-image: url("./libs/img/lm_ex2.png")
+background-size: contain
+
+---
+background-image: url("./libs/img/lm_ex3.png")
+background-size: contain
+
+---
+
+# Remember middle school algebra?
+
+- It really is the same thing. 
+
+- You probably saw something like this:
+
+`$$y = mx + b$$`
+
+- ...or maybe some other variation where **mx** is the *slope* 
+and &lt;blue&gt;b&lt;/blue&gt; is the point where the line crosses the 
+y-axis when x = 0, i.e. the *y-intercept*.
+
+- If you know two of the variables, you can solve for the third... 
+assume x = 2. Solve for y.
+
+`$$y = 10_x + 50$$`
+
+--
+
+`$$y = 10 \times 2 + 50$$`
+
+--
+
+`$$70 = 10 \times 2 + 50$$`
+
+---
+
+# The linear model 
+
+- In the linear model it's the same thing with slightly 
+different names
+
+`$$response \sim intercept + (slope * predictor)$$`
+
+`$$y = b + mx$$`
+
+&lt;/br&gt;
+
+- We call our dependent variable the response variable (or criterion)
+
+- Our independent variable is called a predictor
+
+- The intercept and the slope are **coefficients**
+  - These are the meat and potatoes of the LM
+  - They are also called *parameter estimates*
+
+---
+
+## Technical stuff
+
+#### Terminology
+
+- The *best fit line* is determined using the *ordinary least 
+squares* method 
+- In other words, we try to find the best line that minimizes 
+the distance between the *predicted values* (the line) and the observed data (*fitted values*)
+- Deviations from the regression line are called **residuals**
+- The best fit line is the one that reduces the *sum of squares* 
+of the error term (this is a measure of the variability)
+- We never measure anything perfectly... there is *always* error
+
+--
+
+#### Fitting a model 
+
+`$$y_i = \beta_0 + \beta_1 X_i + \epsilon_i$$`
+
+- Coefficients (parameter estimates)
+  - β&lt;sub&gt;0&lt;/sub&gt;: intercept
+  - β&lt;sub&gt;1&lt;/sub&gt;: slope 
+- ɛ: error
+
+---
+
+# A concrete example
+
+- Using the `mtcars` dataset, we can fit a model with the 
+following variables:
+  - **response variable**: `mpg`
+  - &lt;blue&gt;predictor&lt;/blue&gt;: `wt`
+
+
+```r
+str(mtcars)
+```
+
+```
+## 'data.frame':	32 obs. of  11 variables:
+##  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
+##  $ disp: num  160 160 108 258 360 ...
+##  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec: num  16.5 17 18.6 19.4 17 ...
+##  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
+##  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+##  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
+##  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...
+```
+
+---
+
+# A concrete example
+
+- So we will fit the data using the linear equation...
+
+`$$mpg_i = \beta_0 + \beta_1 wt_i + \epsilon_i$$`
+
+--
+
+- To do this in R, we use the `lm()` function
+
+
+```r
+model &lt;- lm(mpg ~ wt, data = mtcars)
+summary(model)
+```
+
+--
+
+- `lm()` will use the *ordinary least squares* method to obtain 
+parameter estimates, i.e., β&lt;sub&gt;0&lt;/sub&gt; (intercept) and 
+β&lt;sub&gt;1&lt;/sub&gt; (slope)
+
+- In essence, it will estimate the parameters we need to predict 
+`mpg` for a given `weight`
+
+---
+class: middle
+
+&lt;img src="index_files/figure-html/unnamed-chunk-17-1.png" width="936" /&gt;
+
+---
+class: middle
+
+&lt;img src="index_files/figure-html/unnamed-chunk-18-1.png" width="936" /&gt;
+
+---
+class: middle
+
+&lt;img src="index_files/figure-html/unnamed-chunk-19-1.png" width="936" /&gt;
+
+---
+class: middle
+
+&lt;img src="index_files/figure-html/unnamed-chunk-20-1.png" width="936" /&gt;
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- Intercept
+- Slope
+- R&lt;sup&gt;2&lt;/sup&gt;
+
+]
+
+.right-column[
+
+
+```
+## 
+## Call:
+## lm(formula = mpg ~ wt, data = mtcars)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##  -4.54  -2.36  -0.13   1.41   6.87 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    37.29       1.88    19.9   &lt;2e-16 ***
+## wt             -5.34       0.56    -9.6    1e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3 on 30 degrees of freedom
+## Multiple R-squared:  0.75,	Adjusted R-squared:  0.74 
+## F-statistic:  91 on 1 and 30 DF,  p-value: 1.3e-10
+```
+
+]
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- **Intercept**
+- Slope
+- R&lt;sup&gt;2&lt;/sup&gt;
+
+]
+
+.right-column[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-22-1.png" width="720" /&gt;
+
+
+```
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)    37.29      1.878   19.86 8.24e-19
+## wt             -5.34      0.559   -9.56 1.29e-10
+```
+
+]
+
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- **Intercept**
+- Slope
+- R&lt;sup&gt;2&lt;/sup&gt;
+
+]
+
+.right-column[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-24-1.png" width="720" /&gt;
+
+
+```
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)    37.29      1.878   19.86 8.24e-19
+## wt             -5.34      0.559   -9.56 1.29e-10
+```
+
+]
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- Intercept
+- **Slope**
+- R&lt;sup&gt;2&lt;/sup&gt;
+
+]
+
+
+.right-column[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-26-1.png" width="720" /&gt;
+
+
+```
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)    37.29      1.878   19.86 8.24e-19
+## wt             -5.34      0.559   -9.56 1.29e-10
+```
+
+]
+
+---
+
+# Understanding slopes and intercepts
+
+&lt;img src="index_files/figure-html/unnamed-chunk-28-1.png" width="1008" /&gt;
+
+---
+
+# Same intercept, but different slopes
+
+.pull-left[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-29-1.png" width="504" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-30-1.png" width="504" /&gt;
+
+]
+
+---
+
+# Positive and negative slope
+
+.pull-left[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-31-1.png" width="504" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-32-1.png" width="504" /&gt;
+
+]
+
+---
+
+# Different intercepts, but same slopes
+
+.pull-left[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-33-1.png" width="504" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-34-1.png" width="504" /&gt;
+
+]
+
+---
+
+# Making predictions
+
+- Recall the linear model equation...
+
+`$$y_i = \beta_0 + \beta_1 wt_i + \epsilon_i$$`
+
+--
+
+- Our `mtcars` model can be summarized as...
+
+`$$mpg = 37.29 + -5.34 wt$$`
+--
+
+- What is the predicted `mpg` for a car that weighs 1 unit?  
+And one that weighs 3? And 6?
+
+--
+
+  - 31.94 
+  `\(mpg = 37.29 + -5.34 \times 1\)`
+
+  - 21.25 
+  `\(mpg = 37.29 + -5.34 \times 3\)`
+
+  - 5.22 
+  `\(mpg = 37.29 + -5.34 \times 6\)`
+
+---
+class: middle
+
+&lt;img src="index_files/figure-html/unnamed-chunk-37-1.png" width="936" /&gt;
+
+---
+
+# Factors
+
+- What about categorical variables (factors)?
+
+--
+
+&lt;img src="index_files/figure-html/unnamed-chunk-38-1.png" width="1008" /&gt;
+
+---
+
+
+```r
+lm(mpg ~ cyl, data = mtcars)
+```
+
+
+```
+##                 Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)         26.7       0.97    27.4  2.7e-22
+## as.factor(cyl)6     -6.9       1.56    -4.4  1.2e-04
+## as.factor(cyl)8    -11.6       1.30    -8.9  8.6e-10
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-41-1.png" width="1008" /&gt;
+
+---
+
+
+```r
+lm(mpg ~ cyl, data = mtcars)
+```
+
+
+```
+##                 Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)         26.7       0.97    27.4  2.7e-22
+## as.factor(cyl)6     -6.9       1.56    -4.4  1.2e-04
+## as.factor(cyl)8    -11.6       1.30    -8.9  8.6e-10
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-44-1.png" width="1008" /&gt;
+
+---
+
+
+```r
+lm(mpg ~ cyl, data = mtcars)
+```
+
+
+```
+##                 Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)         26.7       0.97    27.4  2.7e-22
+## as.factor(cyl)6     -6.9       1.56    -4.4  1.2e-04
+## as.factor(cyl)8    -11.6       1.30    -8.9  8.6e-10
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-47-1.png" width="1008" /&gt;
+
+---
+
+
+```r
+lm(mpg ~ cyl, data = mtcars)
+```
+
+
+```
+##                 Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)         26.7       0.97    27.4  2.7e-22
+## as.factor(cyl)6     -6.9       1.56    -4.4  1.2e-04
+## as.factor(cyl)8    -11.6       1.30    -8.9  8.6e-10
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-50-1.png" width="1008" /&gt;
+
+---
+
+.pull-left[
+
+### Regression output
+
+
+```r
+lm(mpg ~ cyl, data = mtcars)
+```
+
+<div id="htmlwidget-01ffd3bab95577ea3b72" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-01ffd3bab95577ea3b72">{"x":{"filter":"none","data":[["(Intercept)","as.factor(cyl)6","as.factor(cyl)8"],[26.6636363636364,-6.92077922077923,-11.5636363636364],[0.971800831992561,1.55834818349915,1.2986234862493],[27.4373467132826,-4.44109942441691,-8.90453352036211],[2.68835804966923e-22,0.000119469614331586,8.56820914632642e-10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\u003c/th>\n      <th>Est.\u003c/th>\n      <th>SE\u003c/th>\n      <th>T\u003c/th>\n      <th>p\u003c/th>\n    \u003c/tr>\n  \u003c/thead>\n\u003c/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatRound(this, row, data, 1, 2);\nDTWidget.formatRound(this, row, data, 2, 2);\nDTWidget.formatRound(this, row, data, 3, 2);\nDTWidget.formatRound(this, row, data, 4, 2);\nDTWidget.formatRound(this, row, data, 5, 2);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+
+]
+
+--
+
+.pull-right[
+
+### Means
+
+
+```r
+aggregate(mpg ~ cyl, FUN=mean, data=mtcars)
+```
+
+<div id="htmlwidget-754c929bc5da93a8c22d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-754c929bc5da93a8c22d">{"x":{"filter":"none","data":[[4,6,8],[26.6636363636364,19.7428571428571,15.1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>cyl\u003c/th>\n      <th>mpg\u003c/th>\n    \u003c/tr>\n  \u003c/thead>\n\u003c/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatRound(this, row, data, 0, 2);\nDTWidget.formatRound(this, row, data, 1, 2);\nDTWidget.formatRound(this, row, data, 2, 2);\nDTWidget.formatRound(this, row, data, 3, 2);\nDTWidget.formatRound(this, row, data, 4, 2);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+]
+
+
+&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;
+
+- Each simple effect is an independent samples t-test!
+- The baseline is compared to the other two levels of the factor
+- Notice that `6-cyl` is not compared to `8-cyl`
+- We would have to change the baseline to make that comparison
+
+---
+
+&lt;div style="float:right"&gt;
+
+  &lt;/br&gt;
+&lt;ul&gt;
+  &lt;li&gt;Now we have the 6-to-8 cyl comparison&lt;/li&gt;
+  &lt;li&gt;Notice how the slopes have changed&lt;/li&gt;  
+&lt;/ul&gt;
+
+
+
+&lt;/div&gt;
+
+
+
+```r
+# Relevel factor
+mtcars$cyl &lt;- factor(mtcars$cyl, levels = c(6, 4, 8))
+
+# Refit data
+mod_3 &lt;- lm(mpg ~ cyl, data = mtcars)
+print(summary(mod_3)$coef, digits = 3)
+```
+
+
+```
+##                 Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)        19.74       1.22   16.21 4.49e-16
+## as.factor(cyl)4     6.92       1.56    4.44 1.19e-04
+## as.factor(cyl)8    -4.64       1.49   -3.11 4.15e-03
+```
+
+--
+
+&lt;img src="index_files/figure-html/unnamed-chunk-57-1.png" width="1008" /&gt;
+
+---
+class: middle, center
+
+&lt;iframe src="https://jvcasill.shinyapps.io/shiny_bivariate_regression/" style="border:none;" height="90%" width="100%"&gt;&lt;/iframe&gt;
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('showSlide', function (slide) {setTimeout(function() {window.dispatchEvent(new Event('resize'));}, 100)});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

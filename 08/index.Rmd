@@ -1,0 +1,109 @@
+---
+title: "Intro to R"
+subtitle: "Day 8"
+date: "Class date: 03/07/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/08/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+# Intensity ratios
+
+## Load data
+
+```{r}
+# Create dataframe of intensity ratio data 
+name <- c("joseph", "joseph", 
+          "abril", "abril", 
+          "julio", "julio", 
+          "cris", "cris", 
+          "michelle", "michelle", 
+          "ester", "ester")
+word <- rep(c("tumba", "tuba"), times = 6)
+intensityRatio <- c(0.58, 0.78, 0.9, 0.87, 0.64, 0.87, 0.63, 0.66, 0.71, 0.68, 0.6, 0.70)
+
+df_ir <- data.frame(name, word, intensityRatio)
+
+# Check structure
+str(df_ir)
+```
+
+## Simple plot
+
+```{r, fig.retina=2, fig.width=8}
+# Plot it 
+library(tidyverse)
+ggplot(df_ir, aes(x = word, y = intensityRatio, label = name)) + 
+  geom_boxplot() +
+    geom_text() 
+```
+
+
+
+
+
+# Spectral moments
+
+
+## Load data
+
+```{r}
+# Load spectral moment data 
+my_data <- structure(list(name = structure(c(4L, 4L, 4L, 4L, 1L, 1L, 1L, 
+1L, 5L, 5L, 5L, 5L, 2L, 2L, 2L, 2L, 6L, 6L, 6L, 6L, 3L, 3L, 3L, 
+3L), .Label = c("abril", "cris", "ester", "joseph", "julio", 
+"michelle"), class = "factor"), sound = structure(c(1L, 4L, 2L, 
+3L, 1L, 4L, 2L, 3L, 1L, 4L, 2L, 3L, 1L, 4L, 2L, 3L, 1L, 4L, 2L, 
+3L, 1L, 4L, 2L, 3L), .Label = c("f", "s", "sh", "th"), class = "factor"), 
+    cog = c(13236, 13186, 11088, 6017, 4773, 61.92, 7293, 4383, 
+    9610, 9860, 9767, 3690, 15383, 13186, 13471, 13471, 15087, 
+    15623, 12698, 4625, 5172, 10127, 9951, 4925), sd = c(2717, 
+    2501, 2562, 3156, 1331, 308.77, 3253, 1246, 3568, 2981, 1910, 
+    1393, 3367, 2061, 2697, 3550, 1994, 1830, 1711, 2750, 4622, 
+    4124, 1949, 1558), skewness = c(-1.13, -1.15, 0.06, 1.1, 
+    -0.24, 44.93, -1.24, 0.48, -1.2, -0.89, 0.23, 1.74, -2.6, 
+    -2.2, -0.81, 2.6, -1.24, -1.89, 0.7, 2.91, 1.01, -0.91, -1.5, 
+    3.2), kurtosis = c(3.3, 5.42, 0.22, 0.37, 6.29, 2383, 1.07, 
+    6.8, 0.41, 0.71, 1.02, 5.07, -7.75, 11.83, 1.49, 5.41, 5.58, 
+    7.78, 2.03, 9.19, -0.42, -0.31, 2.6, 11.91)), .Names = c("name", 
+"sound", "cog", "sd", "skewness", "kurtosis"), class = "data.frame", row.names = c(NA, 
+-24L))
+
+
+head(my_data)
+```
+
+## Descriptives
+
+```{r}
+# Check means 
+aggregate(cog ~ sound, FUN = mean, data = my_data)
+aggregate(sd ~ sound, FUN = mean, data = my_data)
+aggregate(skewness ~ sound, FUN = mean, data = my_data)
+aggregate(kurtosis ~ sound, FUN = mean, data = my_data)
+
+# Same as above, but all at once 
+aggregate(cbind(cog, sd, skewness, kurtosis) ~ sound, FUN = mean, data = my_data)
+```
+
+## Simple plot
+
+```{r, fig.retina=2, fig.width=8}
+# Plot it 
+ggplot(my_data[my_data$name != "abril", ], aes(x = sound, y = skewness, color = kurtosis, size = sd)) +
+  geom_point() +
+  geom_violin(alpha = 0.4) + 
+  stat_summary(fun.y = mean, geom = "point", color = "red")
+```
+

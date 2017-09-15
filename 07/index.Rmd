@@ -1,0 +1,77 @@
+---
+title: "Intro to R"
+subtitle: "Day 7"
+date: "Class date: 02/28/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/06/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+```{r echo=FALSE}
+library(knitr)
+read_chunk('analysis.R')
+```
+
+
+
+
+# Libraries
+
+```{r, 'libs', echo=TRUE, message=FALSE}
+```
+
+```{r, 'setwd', echo=FALSE}
+```
+
+# Load data
+
+We have a directory with 5 different .csv data files. We need 
+to use a different method to load all 5 files and combine them 
+into a single dataframe. 
+
+```{r, 'loadData', echo=TRUE, warning=FALSE}
+```
+
+# Tidy data
+
+The ```f0``` column has many undefined data points (and is set 
+as a factor). We need to change these values to ```NA``` and 
+set the column as numeric. We also need to create a few new 
+columns. We will use the ```separate``` function from the 
+```tidyr``` package.
+
+```{r, 'cleandata', echo=TRUE}
+```
+
+# Plots
+
+Let's visualize what we did. 
+
+```{r, 'densityVOT', echo=TRUE, fig.width=10, fig.height=5, fig.retina=2, fig.align='center'}
+```
+
+```{r, 'densityVOTindividual', echo=TRUE, fig.width=10, fig.height=5, fig.retina=2, fig.align='center'}
+```
+
+```{r, 'vowelPlot', echo=TRUE, fig.width=10, fig.height=5, fig.retina=2, fig.align='center'}
+```
+
+</br>
+
+You can download the data [here](http://www.jvcasillas.com/585_01_s2017/programming/r/07/data.zip)
+
+</br></br></br></br>
+
+
+

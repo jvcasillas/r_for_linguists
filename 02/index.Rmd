@@ -1,0 +1,342 @@
+---
+title: "Intro to R"
+subtitle: "Day 2"
+date: "Class date: 01/24/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/02/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+# knitr
+
+## .R scripts
+
+We can create a reproducible document from a .R script using `spin()`
+
+## .Rmd files
+
+When we want to generate a report that will include prose, an `RMarkdown` 
+document (.Rmd) is probably better. 
+
+### yaml front matter 
+
+Some important details about our document are contained in the yaml front 
+matter. It is the section at the top of the document that looks like this:
+
+```
+---
+title: 'title here'
+output: html_document
+---
+```
+
+We can change the type of document to .doc (`output: word_document`) or 
+.pdf (`output: pdf_document`). 
+
+### Code chunks
+
+If we want to include R code in our .Rmd file, we must use code chunks. 
+An R code chunk begins with 3 backticks \`\`\`, curly braces containing 
+the letter "r", followed by our code. The chunk is closed with 3 more 
+backticks. Ex. 
+
+<pre><code>```{r}
+2 + 2
+```</code></pre>
+
+### Inline code 
+
+If we want to evaluate an R expression inside of prose, we can use the 
+following syntax: 
+
+```{r, eval=FALSE}
+    Inline code looks like this `r 2 + 2`
+```
+
+This is an example. Two plus two equals `r 2 + 2`. 
+
+
+
+</br>
+
+# Data structures (cont.)
+
+## Assignment
+
+We can assign values to objects using the assignment operator `<-`. 
+
+```{r}
+# Assign value 5 to 'object'
+object <- 5
+
+# print 'object' 
+print(object)
+
+# Add 5 to 'object'
+object + 5
+```
+
+## Vectors (cont.)
+
+The most basic data structure is the vector. Vectors have types (numeric, character, etc.). 
+If we want to create a vector with a length larger than 1, we can use the `c()` function 
+(concatenate). 
+
+```{r}
+# assigning variables 
+x <- c(1, 2, 6, 3, 7)
+y <- c("a", "b", "c", "d", "e")
+
+# print them 
+print(x)
+print(y)
+```
+
+Vectorized math works the same as an object of length 1 (compare with `object + 5` above). 
+
+```{r}
+x + 20
+```
+
+## Dataframes
+
+A dataframe is a two dimensional object made of columns and rows. The columns have names 
+and can be of different types; however, all columns must have the same length. We can 
+create a dataframe using the `data.frame()` function. 
+
+```{r}
+# creating dataframes
+df <- data.frame(x, y)
+
+print(df)
+```
+
+We can get information about a dataframe using `str()`, `head()`, `tail()`, and `dim()`. 
+
+```{r}
+# Exploring objects 
+str(df)
+head(cars)
+tail(cars)
+dim(cars)
+```
+
+## Lists
+
+A list is a data structure that can cantain any type of object. 
+
+```{r}
+myList <- list(a = 1:3, b = 'abc', c = TRUE)
+str(myList)
+```
+
+You will probably not use lists too much, but it is a good idea to understand how 
+they work in order to have a better understanding of R syntax. 
+
+
+
+
+
+</br>
+
+# Subsetting
+
+## Subsetting vectors 
+
+We can subset a vector using brackets (`[]`). Given that a vector is a 1D object, the number 
+we include in the bracket refers to the position in the vector. In other words, if we want 
+to see the first element of `x`. We can use the bracket notations `x[1]`.
+
+```{r}
+x[1]
+```
+
+## Subsetting dataframes
+
+Subsetting a dataframe works in the same way; however, since the structure has two dimensions, 
+it is necessary to give information about both. We will still use the bracket notations, but we 
+will designate `rows` and `columns` by separating them with a comma. 
+
+```{r}
+# First row, all columns
+df[1, ]
+
+# Secont row, first column 
+df[2, 1]
+
+# rows 1 to 3, all columns
+df[1:3, ]
+```
+
+We can also subset using the names of the columns:
+
+```{r}
+# Give me the first 10 values of 
+# 'speed' in the 'cars' data frame 
+cars$speed[1:10]
+
+# another way 
+cars[1:10, 'speed']
+```
+
+
+
+## Subsetting lists
+
+We can single out an element of a list using bracket notation (like with a vector). This will 
+return another list. 
+
+```{r}
+# Give me the first element
+myList[1]
+
+# Show me the structure of the first element
+str(myList[1])
+```
+
+This may not always be useful. For example, is the first element is a vector, we may want it 
+as a vector (and not a list). In order to subset an element of a list and get it in its `natural` 
+state, we can use double brackets (Note: this is useful if you need to perform an operation on 
+something in a list).
+
+```{r}
+# Give me the first element (not as a list)
+myList[[1]]
+
+# Show me the structure 
+str(myList[[1]])
+```
+
+We can also refer to the names of the objects inside the list directly (if they have names).
+
+```{r}
+myList['a']
+myList[['a']]
+```
+
+We can also subset a subset of a list (what?). For example, the first element of `myList` is 
+the vector `a`. We can obtain the second values of `a` like this:
+
+```{r}
+myList[['a']][2]
+```
+
+
+
+
+
+</br>
+
+# Descriptive statistics
+
+We can calculate descriptive statistics on vectors. Some handy functions are: 
+
+- `sum()`
+- `mean()`
+- `sd()`
+- `abs()`
+
+```{r}
+# Mean of 'x'
+mean(x)
+
+# Sum of 'x'
+sum(x)
+```
+
+We can also do this using data frames or lists. 
+
+```{r}
+# Mean of 'x' in dataframe 'df'
+mean(df$x)
+
+# SD of 'x' in dataframe 'df'
+sd(df$x)
+
+# Sum of 'a' is list 'myList' (double brackets are obligatory)
+sum(myList[['a']])
+
+# SD 'speed' in 'cars'
+sd(cars$speed)
+sd(cars[, 'speed'])
+
+# Mean of first 15 rows of the first column 
+mean(cars[1:15, 1])
+mean(cars$speed[1:15])
+mean(cars$speed[c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)])
+```
+
+The `aggregate()` function is extremely handy. You provide a formula, 
+the function you would like to apply, and the dataframe. For example, 
+consider the `iris` dataset. 
+
+```{r}
+str(iris)
+head(iris)
+```
+
+Let's pretend we are interested in the `Sepal.Length` (column 1). We 
+notice that the `str()` function indicates that there is a factor 
+called `Species` that has three levels ("setosa", "versicolor", "virginica").
+Let's calculate the mean `Sepal.Length` for each level of `Species`. 
+A simple way to do that is to use `aggregate()`. 
+
+```{r}
+# Mean Sepal.Length as a function of Species
+aggregate(Sepal.Length ~ Species, FUN = mean, data = iris)
+```
+
+
+
+
+</br>
+
+# Coercion 
+
+We can change the class of an object through coercion. 
+
+- as.data.frame()
+- as.numeric(y)
+- as.character(x)
+- as.factor()
+
+# Data sets
+
+R is installed with a number of data sets that can be used to practice. To 
+see them use `data()`. Here are the first 60...
+
+```{r, echo=FALSE}
+head(data()$results[, 3], 60)
+```
+
+
+
+
+</br>
+
+# Basic bivariate plot
+
+We can create a bivariate scatterplot using the function `biVarPlot()` from 
+the package `lingStuff`.
+
+```{r, fig.retina=2}
+library(lingStuff)
+biVarPlot(data = cars, x = dist, y = speed, family = 'Gaussian')
+```
+
+In base R we can do the same using the `plot()` function. 
+
+```{r, fig.retina=2}
+plot(speed ~ dist, data = cars)
+```

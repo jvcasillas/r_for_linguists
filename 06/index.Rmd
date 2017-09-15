@@ -1,0 +1,179 @@
+---
+title: "Intro to R"
+subtitle: "Day 6"
+date: "Class date: 02/21/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/06/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+# Libraries
+
+```{r}
+library(tidyverse)
+```
+
+# T-tests
+
+## Independent samples
+
+|  Name | group | score |
+| :---- | :---- | :---- |
+| John  | g1    | 250   |
+| Jane  | g1    | 340   |
+| Jimmy | g2    | 460   |
+| Jessy | g2    | 200   |
+
+Let's turn the table into a dataframe.
+
+```{r}
+name1 <- c('John', 'Jane', 'Jimmy', 'Jessy')
+group1 <- c('g1', 'g1', 'g2', 'g2')
+score1 <- c(250, 340, 460, 200)
+ind_samp <- data.frame(name = name1, group = group1, score = score1)
+print(ind_samp)
+```
+
+Let's test to see if the difference between the score means 
+of 'g1' and 'g2' is equal to 0. 
+
+```{r}
+# t-test: independent 2-group
+t.test(score ~ group, data = ind_samp)
+```
+
+
+
+## Paired samples
+
+|   Name   | Test1 | Test2 |
+| :------- | :---- | :---- |
+| Mike     | 35    | 67    |
+| Melanie  | 50    | 46    |
+| Melissa  | 90    | 86    |
+| Mitchell | 78    | 91    |
+
+Let's turn the table into a dataframe.
+
+```{r}
+name2 <- c('Mike', 'Melanie', 'Melissa', 'Mitchell')
+test1 <- c(35, 50, 90, 78)
+test2 <- c(67, 46, 86, 91)
+prd_samp <- data.frame(test1, test2)
+print(prd_samp)
+```
+
+Let's test to see if the difference between 'test1' and 
+'test2' is equal to 0. 
+
+```{r}
+# t-test: paired sample
+t.test(test1, test2, paired = TRUE)
+```
+
+Recall that we can also use standard y-as-a-function-of-x syntax, 
+but we have to convert the dataframe to long format. 
+
+```{r}
+prd_samp_long <- tidyr::gather(prd_samp, key = test, val = score)
+print(prd_samp_long)
+
+# t-test: paired sample
+t.test(score ~ test, data = prd_samp_long, paired = TRUE)
+```
+
+## More examples
+
+Run paired samples t-test on the iris dataset. 
+Check the structure and pick the first 2 continuous variables.
+
+```{r}
+str(iris)
+```
+
+`Sepal.Length` and `Sepal.Width` (columns 1 and 2) are both continuous. 
+Each row represents different measures of the same flower, so a paired 
+test is appropriate.  
+
+```{r}
+# Paired samples t-test
+t.test(iris$Sepal.Length, iris$Sepal.Width, paired = TRUE)
+```
+
+It looks like the difference between the means is not equal to 0; therefore, 
+we reject the null hypothesis. Here is a plot to visualize the result.
+
+```{r, fig.width=10, fig.retina=2}
+iris %>%
+  select(., Sepal.Length, Sepal.Width) %>%
+  gather(., key = measure, val = value) %>%
+  ggplot(., aes(x = measure, y = value, fill = measure)) + 
+  geom_jitter(alpha = 0.2) + 
+  geom_boxplot() + 
+  theme_bw()
+```
+
+This is an example of how we can write up the result for publication 
+in a manuscript:
+
+>The iris data were analyzed using a paired-samples t-test, with value 
+>as the dependent variable and measure (Length, Width) as a within-subjects 
+>factor. The analysis revealed that the mean between the two measures 
+>was not equal to 0 (t(149) = 34.82, p < 0.001). Specifically, sepal 
+>length (mean: `r round(mean(iris$Sepal.Length), 2)`, sd: `r round(sd(iris$Sepal.Length), 2)`) 
+>was longer than sepal width (mean: `r round(mean(iris$Sepal.Width), 2)`, 
+>sd: `r round(sd(iris$Sepal.Width), 2)`) (See Figure X). The mean of 
+>the differences was 2.79 cm with the 95% confidence interval falling 
+>between 2.63 cm and 2.94 cm.
+
+
+Notice that the write-up explains what test we used, what the variables are 
+(DV, IV) and the relevant levels, the result of the test, an explanation 
+of the result, including directionality of the effect.
+
+Try to do the same thing using the `Species` factor. Let's compare the 
+`Sepal.Width` of the `setosa` and `versicolor` species. How can we do this?
+
+```{r}
+str(iris)
+```
+
+`Species` is a factor with three levels. We know that a t-test can only compare 
+two groups, so we need to subset the dataset in order to remove the 3rd 
+level of `Species`, `virginica`. 
+
+```{r}
+# Remove 'virginica'
+irisNoVirginica <- iris[iris$Species != "virginica", ]
+
+# Independent samples t-test 
+t.test(Sepal.Width ~ Species, data = irisNoVirginica, paired = FALSE)
+```
+
+Notice that I changed paired to FALSE. Why? Is each observation coming from 
+the same flower? Here is a visualization of the result:
+
+```{r, fig.width=10, fig.retina=2}
+ggplot(irisNoVirginica, aes(x = Species, y = Sepal.Width, fill = Species)) + 
+  geom_jitter(alpha = 0.2) + 
+  geom_boxplot() + 
+  theme_bw()
+```
+
+How would you write in prose the result of the test?
+
+</br></br></br></br>
+
+
+

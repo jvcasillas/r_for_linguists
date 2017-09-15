@@ -1,0 +1,213 @@
+---
+title: "Intro to R"
+subtitle: "Data structures"
+date: "Class date: 01/17/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE, echo=FALSE)
+library(learnr)
+```
+
+# Working directories
+
+You can set the working directory of your document using the `setwd()` 
+function. You can check the current working directory using `getwd()`. 
+Alternatively, you can set the working directory manually in RStudio 
+(Session > Set Working Directory). 
+
+# Install packages
+
+Packages can be installed from RStudio using the 'Packages' tab 
+(normally in the bottom right window). Search for the package you want 
+and hit `enter`. You can *manually* install packages from the console 
+using the `install.packages()` function. Ex. 
+`install.packages('devtools')`.
+
+# Loading packages
+
+To load a package after you have installed it, use the `library()` 
+function. Try loading the ```tidyverse``` package.
+
+```{r, load-tidyverse, exercise=TRUE}
+
+```
+
+# Comments
+
+In R, anything that comes after \# is considered a comment. Comments are 
+important because they help you to remember what you did, why you did 
+it, etc. Add 2 + 2 and create a relevant comment:
+
+```{r, comment-code, exercise=TRUE}
+#############################
+# Always comment your code! #
+#############################
+
+# This is a comment
+2 + 2
+```
+
+
+# R as a calculator
+
+This isn't incredibly useful, but it gives you an idea of how R works. 
+Try some simple math:
+
+```{r, r-calculator, exercise=TRUE}
+
+#####################
+# R as a calculator #
+#####################
+
+2 + 2
+
+4^2
+
+(12 * 15) / 2
+```
+
+
+
+
+# Assigning variables
+
+R uses objects. You must assign them using ```<-``` in order 
+to store them in memory. You can them call them by typing 
+the variable or calling ```print()```. Store the value '2' 
+to the object 'x'
+
+```{r, assignment, exercise=TRUE}
+
+x <- 2
+print(x)
+
+# Perform an operation on 'x'
+x + 4
+```
+
+
+# Data structures
+
+```{r}
+
+###################
+# Data structures #
+###################
+
+# Vectors #
+
+# We will create 3 vectos: x, y, and z
+x <- c(1, 2, 3)
+y <- c(4, 5, 6)
+z <- c('a', 'b', 'c')
+
+# We can use the print function to see the vectors in the console
+print(x); print(y); print(z)
+
+# We can perform operations on vectors
+# add one to each value in the vector
+# (this is much more important that it seems!)
+x + 1 
+
+# add the values in x to the values in y 
+x + y 
+```
+
+```{r, eval=FALSE}
+# add the values of y to the values of z (this gives an error)
+# Why? What type of vector is 'x'? and 'y'?
+y + z
+```
+
+
+
+```{r}
+# Matrices #
+# Matrices = 2d vectors
+
+matrix(1:10, nrow = 5, ncol = 2)
+
+
+
+# Dataframes #
+# Dataframes = 2d matrices with column and row names
+# IMPORTANT: a column in a dataframe is like a vector, 
+# each column can be of a different type (factor, numeric, etc.)
+
+# createa a dataframe using the vectors 'x', 'y', and 'z'
+testDF <- data.frame(x, y, z)
+print(testDF)
+
+# Let's look at some more interesting dataframes
+# The head() function shows the 1st six rows of a dataframe
+head(mtcars)
+head(USArrests)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, echo=FALSE}
+library("htmltools")
+library("bsplus")
+```
+
+# Generate a report
+
+## Using Rmarkdown
+
+- Open a template .Rmd file (File > New File > RMarkdown...)
+- knit
+
+## Using an R script
+
+- .R files can be *spun* into .html files using the `spin` function  
+Ex.  
+`knitr::spin('myscript.R')`
+
+<div class="row">
+ <div class="col-md-2"></div>
+ <div class="col-md-8">
+  <div class="thumbnail">
+
+```{r, echo=FALSE}
+bs_carousel(id = "rsession") %>%
+  bs_set_data(interval = FALSE) %>%
+  bs_append(
+            content = bs_carousel_image(src = "./assets/img/1.png"), 
+            caption = bs_carousel_caption("Make sure to set the working directory")) %>%
+  bs_append(
+            content = bs_carousel_image(src = "./assets/img/2.png"), 
+            caption = bs_carousel_caption("Use the spin function to generate report"))
+```
+  </div>
+ </div>
+ <div class="col-md-2"></div>
+</div>
+
+
+
+
+

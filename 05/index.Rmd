@@ -1,0 +1,89 @@
+---
+title: "Intro to R"
+subtitle: "Day 5"
+date: "Class date: 02/14/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/05/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+# In class recordings
+
+- Record 5 oral vowels of Spanish in interconsonantal position
+- pVp (pipi, pepe, papa, popo, pupu)
+- calculate F1 and F2 (Hz) for each vowel 
+- note formant frequencies
+
+```{r, warning=FALSE, message=FALSE}
+# Libraries
+library(tidyverse)
+
+# Vowel data frame
+participant <- rep(c('ester', 'cristina', 'michelle', 'abril', 'julio'), each = 5)
+gender <- rep(c('f', 'f', 'f', 'f', 'm'), each = 5)
+vowel <- rep(c('i', 'e', 'a', 'o', 'u'), 5)
+f1 <- c(
+#   i    e    a    o    u
+  387, 768, 928, 640, 516, # ester
+  318, 499, 846, 500, 521, # cristina
+  314, 803, 928, 592, 622, # michelle
+  330, 651, 886, 753, 600, # abril
+  297, 416, 697, 522, 319  # julio
+)
+
+f2 <- c(
+#    i     e     a     o    u
+  2271, 2315, 1668, 1247, 1476, # ester
+  2606, 2267, 1484,  966, 1479, # cristina
+  1900, 2392, 1733, 1489, 1406, # michelle
+  1774, 2329, 1593, 1002, 1811, # abril
+  2237, 2050, 1491, 1157, 1348   # julio
+)
+
+# Create data frame
+df_vowels <- data.frame(participant, gender, vowel, f1, f2)
+
+# Check structure
+str(df_vowels)
+
+```
+
+
+# Plot the data
+
+```{r}
+# First we calculate the mean values 
+# of each vowel for F1 and F2 so that 
+# we can include them in the plot 
+mean <- aggregate(cbind(f1, f2) ~ vowel, FUN = mean, data = df_vowels)
+
+
+ggplot(df_vowels, aes(x = f2, y = f1, color = vowel)) + 
+  geom_point(show.legend = F) + 
+  geom_text(data = mean, aes(x = f2, y = f1, color = vowel, label = vowel), size = 9, show.legend = F) + 
+  scale_x_reverse() + 
+  scale_y_reverse() + 
+  stat_ellipse(type = "norm")
+```
+
+We can also use the ```vowel_plot``` function from ```lingStuff```. 
+
+```{r}
+library(lingStuff)
+vowel_plot(data = vowel_data, vowel = 'vowel', f1 = 'f1', f2 = 'f2', group = 'gender')
+```
+
+
+
+</br>

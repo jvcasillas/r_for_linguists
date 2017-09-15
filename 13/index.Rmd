@@ -1,0 +1,153 @@
+---
+title: "Intro to R"
+subtitle: "Day 13: Working with binary data"
+date: "Class date: 04/18/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/13/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+
+First we will look at a simple case of binary data. We use 
+the ```mtcars``` dataset. Let's get some descriptives.
+
+```{r}
+str(mtcars)
+
+# make subset of mtcars
+# keep column 'mpg' and 'am'
+
+my_cars <- mtcars[, c('mpg', 'am')]
+
+# calculate mean 'mpg' as a function of 'am'
+(my_agg <- aggregate(mpg ~ am, FUN = mean, data = my_cars))
+```
+
+Now let's make a plot. We'll start simple and make a bar 
+graph using the means we calculated above. 
+
+```{r}
+# make a plot
+library(tidyverse)
+ggplot(my_agg, aes(x = am, y = mpg)) + 
+ geom_col()
+```
+
+Rather ugly, but it works. We can use ggplot to calculate 
+descriptives for us. We will use ```stat_summary``` to 
+calculate the mean and the standar error. This is much more 
+informative than a bar graph and avoids including 0.
+
+```{r}
+ggplot(my_cars, aes(x = as.factor(am), y = mpg)) + 
+  stat_summary(fun.data = 'mean_se', geom = 'errorbar') + 
+  stat_summary(fun.y = 'mean', geom = 'point', color = 'red', size = 3)
+```
+
+Ok. Now let's flip our DV and IV. We will look at ```am``` as a 
+function of ```mpg``` (automatic/manual transmition as a function 
+of gas milleage). 
+
+```{r}
+ggplot(my_cars, aes(x = mpg, y = am)) + 
+  geom_point()
+```
+
+Looks good. We can fit a model to the data using ```geom_smooth```.   
+
+```{r}
+ggplot(my_cars, aes(x = mpg, y = am)) + 
+  geom_point() + 
+  geom_smooth(method = 'glm', method.args = list(family = "binomial"))
+```
+
+Good. Now let's generate some data to plot something more interesting.
+
+```{r}
+# Generate data
+var1  <- c(0, 0, 0, 0, 1, 1, 1)
+var2  <- c(0, 0, 0, 1, 1, 1, 1)
+var3  <- c(0, 0, 1, 0, 1, 1, 1)
+var4  <- c(0, 0, 0, 1, 0, 1, 1)
+var5  <- c(1, 0, 1, 0, 1, 1, 1)
+var6  <- c(0, 0, 0, 1, 1, 1, 1)
+var7  <- c(0, 0, 0, 0, 1, 1, 0)
+var8  <- c(0, 0, 0, 0, 0, 1, 1)
+var9  <- c(0, 1, 0, 1, 1, 0, 1)
+var10 <- c(0, 0, 0, 1, 1, 1, 1)
+resp <- rep(c(var1, var2, var3, var4, var5, var6, var7, var8, var9, var10), times = 10)
+
+partN  <- 1:100
+subjId <- rep(paste0('subj', partN), each = 7)
+my_df  <- data.frame(subjId, 
+                     stim = rep(1:7, times = 100), 
+                     response = resp)
+
+str(my_df)
+head(my_df)
+tail(my_df)
+```
+
+Again we can calculate descriptives and plot them. 
+
+```{r}
+(my_avg <- aggregate(response ~ as.factor(stim), FUN = mean, data = my_df))
+
+ggplot(my_avg, aes(x = `as.factor(stim)`, y = response)) + 
+  geom_col()
+```
+
+This works but let's try using what we learned above. We can also 
+make the points more interpretable using ```geom_jitter```.
+
+```{r}
+ggplot(my_df, aes(x = stim, y = response)) + 
+  geom_jitter(width = 0.5, height = 0.05, alpha = 0.1) + 
+  geom_smooth(method = 'glm', method.args = list(family = 'binomial')) + 
+  theme_bw()
+```
+
+Another option (probably a better one) is to fit an actual model and 
+plot that. 
+
+```{r}
+my_glm <- glm(response ~ stim, data = my_df, family = 'binomial')
+summary(my_glm)
+
+
+ggplot(my_df, aes(x = stim, y = response)) + 
+  stat_summary(fun.data = 'mean_se', geom = 'pointrange') + 
+  stat_summary(aes(y = fitted(my_glm)), fun.y = 'mean', geom = 'line')
+```
+
+What about completely categorical data? Let's go back to the 
+```mtcars``` dataset. 
+
+```{r}
+str(mtcars)
+
+# make subset of categorical data
+vs_am <- mtcars %>%
+  select(vs, am)
+
+# calculate crosstabs
+(vs_am_xt <- xtabs(~ vs_am$vs + vs_am$am))
+
+# turn the crosstab into a proportion table and plot it 
+as.data.frame(prop.table(vs_am_xt, 1)) %>%
+  select(., vs = vs_am.vs, am = vs_am.am, freq = Freq) %>%
+  ggplot(., aes(x = vs, y = freq, fill = am)) + 
+  geom_col(position = 'dodge')
+```
+

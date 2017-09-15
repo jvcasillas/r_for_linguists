@@ -1,0 +1,120 @@
+---
+title: "Intro to R"
+subtitle: "Day 3"
+date: "Class date: 01/31/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/03/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+# Load libraries
+
+```{r}
+library(tidyverse)
+```
+
+# Working directories and project folders
+
+We are going to create a project folder `rsession` and set it as the working 
+directory. In my case, the `rsession` folder is on the desktop. 
+
+```{r, eval=FALSE}
+# set working directory to 'sression'
+setwd("~/Desktop/rsession")
+```
+
+# Loading data 
+
+## From R
+
+Remember R comes with data sets we can use to practice. 
+
+```{r, echo=FALSE}
+head(data()$results[, 3], 20)
+```
+
+## From an external source
+
+We will download data from the internet and load it into R. Use the following 
+[link](http://tinyurl.com/h6vnd8l) to get the data, save it as a .csv file and 
+place it the `rsession` folder. (Note: I placed mine inside a subfolder called 
+'data'. You can put yours wherever you want, but remember that you must specify 
+the path to the file.)
+
+In order to load the data we will use the `read.csv()` function. You can check 
+which arguments this function takes by using the `args()` function (if you are 
+curious). 
+
+```{r}
+df <- read.csv('./data/data.csv')
+```
+
+Now we can look at the data frame and obtain some summary information. 
+
+```{r}
+# Print data frame
+print(df)
+
+# 5 number summary
+summary(df)
+
+# structure
+str(df)
+```
+
+Notice that this data frame contains two factors. We have not spent a lot of 
+time dealing with factors. The two factors in this data frame are `group` and 
+`gender`, which have 3 and 2 levels respectively. The `str()` function tell 
+us all the information we need to know.
+
+
+
+# Summary stats
+
+The `aggregate` function can be useful when we want to calculate summary stats 
+on factors. `aggregate` takes 3 important arguments: 1) the formula, 2) the FUN(ction), 
+and 3) the data. Here are some examples:
+
+```{r}
+# read: mean score as a function of gender
+aggregate(score ~ gender, FUN = sd, data = df)
+
+# read: mean score as a function of group
+aggregate(score ~ group, FUN = mean, data = df)
+
+# read: mean score as a function of group and gender
+aggregate(score ~ group + gender, FUN = mean, data = df)
+
+# We can also calculate the mean and the sd at the 
+# same time 
+aggregate(score ~ gender, data = df, FUN = function(x) c(mean = mean(x), sd = sd(x)))
+```
+
+
+# More plots
+
+Base R includes the `boxplot()` function, which can be useful for quick and 
+simple data visualization. The argument structure is similar to `aggregate`. 
+First we include the formula and then we specify the data frame.
+
+```{r, fig.retina=2, fig.width=9, fig.height=5, fig.align='center'}
+boxplot(score ~ gender + group, data = df)
+```
+
+# Projects
+
+We can automate the project creation process using the `create_project()` function 
+in the `lingStuff` package. 
+
+</br></br></br></br>

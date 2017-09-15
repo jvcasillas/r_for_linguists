@@ -1,0 +1,150 @@
+---
+title: "Intro to R"
+subtitle: "Day 4"
+date: "Class date: 02/07/2017</br> Last update: `r format(Sys.time(), '%D')`"
+output: 
+  html_document: 
+    theme: lumen
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render('./programming/r/04/index.Rmd')
+```
+
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE)
+```
+
+
+# ggplot2
+
+## Info 
+
+- R package for making elegant plots quickly
+- Written by Hadley Wickham when he was a graduate student at Iowa State
+- Automatcally deals with spacings, text, titles but also allows you to annotate by “adding”
+- Superficial similarity to lattice but generally easier/more intuitive
+- Plots are built up in layers – Plot the data, overlay a summary, metadata and annotation
+- Works with a data frame
+
+## Components
+
+- aestheic mappings: how data are mapped to color, size
+- facets: for conditional plots
+- geoms: geometric objects like points, lines, shapes
+- stats: statitcal transformations
+- scales: what scale an aesthetic map uses (example: male = red, female = blue)
+- coordinate system
+
+The basic structure is as follows...
+
+```{r, eval=FALSE}
+ggplot(dataframe, aes(x = , y = )) + 
+```  
+
+Aesthetics can include `x`, `y`, `shape`, `color`, `fill`, and others. 
+
+You then add geoms (`geom_point()`, `geom_smooth()`, `geom_boxplot()`, among others).
+
+```{r}
+library(tidyverse)
+
+ggplot(mtcars, aes(x = cyl, y = mpg)) + 
+  geom_point()
+
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg, fill = as.factor(vs))) + 
+  geom_boxplot()
+
+ggplot(mtcars, aes(x = hp, y = mpg, shape = as.factor(vs))) + 
+  geom_point() 
+
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) + 
+  geom_boxplot() + 
+  facet_grid(as.factor(vs) ~ .)
+```
+
+# Download data from the internet
+
+We can download a file from the internet directly in R. 
+
+```{r}
+# Optionally assign the url to an object 
+fileUrl <- 'https://dl.dropboxusercontent.com/u/7256527/data.csv'
+
+# Download file 
+download.file(fileUrl, destfile = "./data.csv", method = "curl")
+```
+
+# Data reformatting
+
+## Wide to long
+
+```{r}
+set.seed(1)
+wide <- data.frame(
+  participant = c("p1", "p2", "p3", "p4", "p5", "p6"), 
+  info = c("g1m", "g1m", "g1f", "g2m", "g2m", "g2m"),
+  day1score = rnorm(n = 6, mean = 80, sd = 15), 
+  day2score = rnorm(n = 6, mean = 88, sd = 8)
+)
+
+print(wide)
+```
+
+As you can see, this data set is in wide format. In order to do 
+most analyses, we want **tidy data**. That is, each column should 
+represent a variable and each row should represent an observation. 
+A simple way to reformat the data is with the `gather()` function 
+from the `tidyr` package. The basic format is as follows:
+
+```{r eval=FALSE}
+gather(df, key = groupingVar, val = dv)
+```
+
+
+```{r}
+library(tidyr)
+
+df_long <- gather(data = wide, key = day, val = score, -participant, -info)
+print(df_long)
+
+ggplot(df_long, aes(x = day, y = score)) + 
+  geom_boxplot()
+```
+
+## More subsetting with logical statements
+
+- `==`: equal 
+- `!=`: not equal
+- `>`: greater than
+- `<`: less than
+- `>=`: greater than or equal to
+- `<=`: less than or equal to 
+- `|`: or 
+- `&`: and 
+
+```{r}
+# All rows in which `cyl` does not equal 6
+mtcars[mtcars$cyl != 6, ]
+```
+
+## Add new variables 
+
+We can create new variables in our data frame using logical statements. 
+For example, the following code will create a new variable `size`. The 
+variable is a factor with two levels: 'big' and 'small'. Any observation 
+in which `cyl` size is 8 will be assigned 'big', any `cyl` size smaller 
+(i.e. not equal to 8) will be assigned 'small'. 
+
+```{r}
+mtcars$size <- NA 
+mtcars[mtcars$cyl == 8, 'size'] <- 'big'
+mtcars[mtcars$cyl != 8, 'size'] <- 'small'
+print(mtcars)
+```
+
+
+

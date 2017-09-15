@@ -1,0 +1,1001 @@
+---
+title: "SPAN 585"
+subtitle: "Statistical inference, t-tests, and the linear model"
+author: "Joseph V. Casillas, PhD"
+date: "Rutgers University | Spring 2017</br>Last update: `r format(Sys.time(), '%D')`"
+output:
+  xaringan::moon_reader:
+    css: "../../../site_libs/assets/css/mySlides.css"
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: FALSE
+      ratio: "16:9"
+---
+
+
+
+```{r setup, include=FALSE, cache=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE, cache=FALSE}
+rmarkdown::render("./programming/r/inference/index.Rmd")
+xaringan::inf_mr('./programming/r/inference/index.Rmd')
+```
+
+
+class: inverse, middle, center
+
+# Basic statistical inference
+
+---
+background-image: url("../../site_libs/assets/img/pensar2.jpg")
+background-size: 250px
+background-position: 95% 5%
+
+# Hypothesis testing
+
+- Tenemos una pregunta. Queremos saber 'la verdad'.
+
+- Generalmente comparamos dos distribuciones  
+ej. Queremos saber si un grupo se difiere de otro con respecto a algo
+
+- Es decir, postulamos algo acerca de la relación entre las distribuciones
+
+- Lo que postulamos se considera una *alternativa* a la hipótesis *nula*
+	- **Hipótesis nula** (H<sub>0</sub>): no hay ninguna diferencia entre las 
+	distribuciones
+	- <BLUE>Hipótesis alternativa</BLUE> (H<sub>1</sub>): hay una diferencia 
+	entre las distribuciones
+
+- Se determina cuál es el test estadístico apropiado según el tipo de datos
+
+- Después de llevar a cabo el test relevante...
+	- o se rechaza la hipótesis nula si hay suficiente evidencia
+	- o no se rechaza la hipótesis nula (*fail to reject* H<sub>0</sub>)
+
+---
+background-image: url("../../site_libs/assets/img/confundido.png")
+background-size: 250px
+background-position: 85% 20%
+
+# ¿Qué test estadístico?
+
+- Hay muchos. 
+
+- Como mínimo debéis entender/poder usar:
+	- t-test
+	- regresión lineal
+
+---
+
+# T-test
+
+- Compara dos distribuciones para determinar si son diferentes.
+
+- ¿Qué quiere decir 'diferentes'?
+
+--
+
+- Consideramos que son 'diferentes' si la relación entre ellas se debe a algo que 
+no sea el azar. 
+
+- Normalmente se analiza la probabilidad de que realmente exista una relación.
+
+- El t-test determina si la diferencia entre los promedios es igual a 0
+
+--
+
+```{r, echo=FALSE, fig.align='center', fig.width=12, fig.height=4, fig.retina=2, cache=TRUE}
+library(ggplot2)
+group <- c(rep('g1', 3000), rep('g2', 3000))
+var1 <- rnorm(n = 3000, mean = -10, sd = 20)
+var2 <- rnorm(n = 3000, mean = 10, sd = 20)
+var <- c(var1, var2)
+df <- data.frame(group, var)
+
+ggplot(df, aes(var)) + 
+	geom_density(aes(lty = group, fill = group), alpha = 0.5) + 
+	geom_vline(xintercept = mean(var1)) + 
+	geom_vline(xintercept = mean(var2), lty = 2) + 
+	scale_fill_brewer(palette = 'Set1') + 
+	theme_bw(base_size = 18, base_family = 'Times')
+```
+
+---
+
+# T-test
+
+- Hay varios tipos de t-test
+- Nos interesan dos:
+	1. independent samples
+	2. paired samples
+
+--
+
+.pull-left[
+
+### Independent samples
+
+| Name  | group | score |
+| :---- | :---- | :---- |
+| John  | g1    | 250   | 
+| Jane  | g1    | 340   | 
+| Jimmy | g2    | 460   | 
+| Jessy | g2    | 200   | 
+
+]
+
+.pull-right[
+
+### Paired samples
+
+| Name     | Test1 | Test2 |
+| :------- | :---- | :---- |
+| Mike     |  35   | 67    |
+| Melanie  |  50   | 46    |
+| Melissa  |  90   | 86    |
+| Mitchell |  78   | 91    |
+
+]
+
+---
+
+# Independent samples
+
+```{r, cache=TRUE}
+name1 <- c('John', 'Jane', 'Jimmy', 'Jessy')
+group1 <- c('g1', 'g1', 'g2', 'g2')
+score1 <- c(250, 340, 460, 200)
+ind_samp <- data.frame(name = name1, group = group1, score = score1)
+
+# t-test: # independent 2-group
+t.test(score ~ group, data = ind_samp)
+```
+
+---
+
+# Paired
+
+```{r, cache=TRUE}
+name2 <- c('Mike', 'Melanie', 'Melissa', 'Mitchell')
+test1 <- c(35, 50, 90, 78)
+test2 <- c(67, 46, 86, 91)
+prd_samp <- data.frame(test1, test2)
+
+# t-test: paired sample
+t.test(test1, test2, paired = TRUE)
+```
+
+---
+
+# Paired (alternative syntax)
+
+We can transfrom the dataframe from wide to long. 
+
+```{r, cache=TRUE}
+name2 <- c('Mike', 'Melanie', 'Melissa', 'Mitchell')
+test1 <- c(35, 50, 90, 78)
+test2 <- c(67, 46, 86, 91)
+prd_samp <- data.frame(test1, test2)
+prd_samp_long <- tidyr::gather(prd_samp, key = test, val = score)
+print(prd_samp_long)
+```
+
+---
+
+# Paired (alternative syntax)
+
+Same result...
+
+```{r, cache=TRUE}
+# t-test: paired sample
+t.test(score ~ test, data = prd_samp_long, paired = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+class: inverse, center, middle
+
+# The linear model
+
+---
+
+# The linear model
+
+- What it encompasses... a lot. It's everywhere.
+- The linear model allows us to test for a linear 
+relationship between 2 (or more) variables
+- It can be used to (1) quantify the strength of the relationship, 
+or (2) predict
+
+### Some examples
+
+- weight ~ height
+- IQ ~ age
+- RT ~ group
+- F1 ~ vowel
+
+--
+- F1 ~ vowel + group
+- F1 ~ vowel + group + age + height
+
+
+.footnote[`~` = as a function of]
+
+---
+background-image: url("./libs/img/lm_ex1.png")
+background-size: contain
+
+---
+background-image: url("./libs/img/lm_ex2.png")
+background-size: contain
+
+---
+background-image: url("./libs/img/lm_ex3.png")
+background-size: contain
+
+---
+
+# Remember middle school algebra?
+
+- It really is the same thing. 
+
+- You probably saw something like this:
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$y = mx + b$$"))
+```
+
+- ...or maybe some other variation where **mx** is the *slope* 
+and <blue>b</blue> is the point where the line crosses the 
+y-axis when x = 0, i.e. the *y-intercept*.
+
+- If you know two of the variables, you can solve for the third... 
+assume x = 2. Solve for y.
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$y = 10_x + 50$$"))
+```
+
+--
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$y = 10 \\times 2 + 50$$"))
+```
+
+--
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$70 = 10 \\times 2 + 50$$"))
+```
+
+---
+
+# The linear model 
+
+- In the linear model it's the same thing with slightly 
+different names
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$response \\sim intercept + (slope * predictor)$$"))
+```
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$y = b + mx$$"))
+```
+
+</br>
+
+- We call our dependent variable the response variable (or criterion)
+
+- Our independent variable is called a predictor
+
+- The intercept and the slope are **coefficients**
+  - These are the meat and potatoes of the LM
+  - They are also called *parameter estimates*
+
+---
+
+## Technical stuff
+
+#### Terminology
+
+- The *best fit line* is determined using the *ordinary least 
+squares* method 
+- In other words, we try to find the best line that minimizes 
+the distance between the *predicted values* (the line) and the observed data (*fitted values*)
+- Deviations from the regression line are called **residuals**
+- The best fit line is the one that reduces the *sum of squares* 
+of the error term (this is a measure of the variability)
+- We never measure anything perfectly... there is *always* error
+
+--
+
+#### Fitting a model 
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$y_i = \\beta_0 + \\beta_1 X_i + \\epsilon_i$$"))
+```
+
+- Coefficients (parameter estimates)
+  - β<sub>0</sub>: intercept
+  - β<sub>1</sub>: slope 
+- ɛ: error
+
+---
+
+# A concrete example
+
+- Using the `mtcars` dataset, we can fit a model with the 
+following variables:
+  - **response variable**: `mpg`
+  - <blue>predictor</blue>: `wt`
+
+```{r, echo=TRUE}
+str(mtcars)
+```
+
+---
+
+# A concrete example
+
+- So we will fit the data using the linear equation...
+
+```{r, echo=FALSE, results='asis'}
+cat(sprintf("$$mpg_i = \\beta_0 + \\beta_1 wt_i + \\epsilon_i$$"))
+```
+
+--
+
+- To do this in R, we use the `lm()` function
+
+```{r, eval=FALSE}
+model <- lm(mpg ~ wt, data = mtcars)
+summary(model)
+```
+
+--
+
+- `lm()` will use the *ordinary least squares* method to obtain 
+parameter estimates, i.e., β<sub>0</sub> (intercept) and 
+β<sub>1</sub> (slope)
+
+- In essence, it will estimate the parameters we need to predict 
+`mpg` for a given `weight`
+
+---
+class: middle
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=13, fig.height=7, cache=TRUE, eval=TRUE}
+
+library(tidyverse)
+
+# Basic plot to demonstrate 'y ~ x'
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_smooth(method = 'lm', se = F, color = 'white') + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  theme_bw(base_size = 20, base_family = 'Times')
+
+```
+
+---
+class: middle
+
+```{r, echo=FALSE, fig.retina=2, fig.width=13, fig.height=7, cache=TRUE, eval=TRUE}
+
+# Show that mean isnt useful
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_smooth(method = 'lm', se = F, color = 'white') + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  geom_hline(yintercept = mean(mtcars$mpg), lwd = 2, 
+             color = 'darkred') + 
+  annotate('text', x = (mean(mtcars$wt) + 1), 
+           y = (mean(mtcars$mpg) + 1), size = 6,
+           label = 'Mean mpg', color = 'darkred') +
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+class: middle
+
+```{r, echo=FALSE, fig.retina=2, fig.width=13, fig.height=7, cache=TRUE, eval=TRUE}
+
+mod <- lm(mpg ~ wt, data = mtcars)
+
+# show what ordinary least squares means
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  geom_hline(yintercept = mean(mtcars$mpg), lwd = 2, 
+             color = 'darkred') + 
+  annotate('text', x = (mean(mtcars$wt) + 1), 
+           y = (mean(mtcars$mpg) + 1), size = 6,
+           label = 'Mean mpg', color = 'darkred') + 
+  stat_smooth(method = 'lm', se = F, color = 'darkblue', 
+              lwd = 2, fullrange = TRUE) + 
+  annotate('text', x = (mean(mtcars$wt) + 1), 
+           y = (mean(mtcars$mpg) - 2), size = 6,
+           label = 'Best linear fit', color = 'darkblue') +
+  theme_bw(base_size = 20, base_family = 'Times')
+
+```
+
+---
+class: middle
+
+```{r, echo=FALSE, fig.retina=2, fig.width=13, fig.height=7, cache=TRUE, eval=TRUE}
+
+ggplot(mod, aes(x = fitted(mod), y = residuals(mod))) + 
+  geom_hline(yintercept = 0, color = 'darkblue', lwd = 2) + 
+  annotate('text', x = 10, y = -1, size = 6,
+           label = 'Best linear fit\nLeast squares estimate\n(sideways)', color = 'darkblue') +
+  geom_segment(aes(xend = fitted(mod), yend = 0), 
+               color = "darkred") +
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  theme_bw(base_size = 20, base_family = 'Times')
+
+```
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- Intercept
+- Slope
+- R<sup>2</sup>
+
+]
+
+.right-column[
+
+```{r, echo=FALSE, eval=TRUE}
+mod <- lm(mpg ~ wt, data = mtcars)
+print(summary(mod), digits = 2)
+```
+
+]
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- **Intercept**
+- Slope
+- R<sup>2</sup>
+
+]
+
+.right-column[
+
+```{r, echo=FALSE, fig.width=10, fig.height=4, fig.retina=2, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_vline(xintercept = 0, lty = 2, lwd = 0.8, color = 'black') + 
+  geom_hline(yintercept = coef(mod)[1], lty = 2, lwd = 0.8, color = 'black') + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  stat_smooth(method = 'lm', se = F, color = 'darkblue', 
+              lwd = 2, fullrange = TRUE) + 
+  xlim(0, 6) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+
+```
+
+```{r, echo=FALSE, eval=TRUE}
+print(summary(mod)$coef, digits = 3)
+```
+
+]
+
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- **Intercept**
+- Slope
+- R<sup>2</sup>
+
+]
+
+.right-column[
+
+```{r, echo=FALSE, fig.width=10, fig.height=4, fig.retina=2, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_vline(xintercept = 0, lty = 2, lwd = 0.8, color = 'black') + 
+  geom_hline(yintercept = coef(mod)[1], lty = 2, lwd = 0.8, color = 'black') + 
+  geom_segment(aes(x = 1, xend = 0, y = 16, yend = coef(mod)[1]), 
+               arrow = arrow(angle = 15, type = "closed"), color = 'darkred') +
+  annotate('text', x = 1.2, y = 15, label = "y-intercept = 37.29", 
+           size = 6, color = 'darkred') + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  stat_smooth(method = 'lm', se = F, color = 'darkblue', 
+              lwd = 2, fullrange = TRUE) + 
+  xlim(0, 6) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+
+```
+
+```{r, echo=FALSE,  eval=TRUE}
+print(summary(mod)$coef, digits = 3)
+```
+
+]
+
+---
+
+# Interpreting model output
+
+.left-column[
+
+- Intercept
+- **Slope**
+- R<sup>2</sup>
+
+]
+
+
+.right-column[
+
+```{r, echo=FALSE, fig.width=10, fig.height=4, fig.retina=2, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_segment(aes(x = 0, xend = 1, 
+                   y = coef(mod)[1], yend = coef(mod)[1]), 
+                   lty = 2, lwd = 0.8, color = 'black') + 
+  geom_segment(aes(x = 1, xend = 1, 
+                   y = coef(mod)[1], yend = coef(mod)[1] + coef(mod)[2]), 
+                   lty = 2, lwd = 0.8, color = 'black') + 
+  geom_segment(aes(x = 2, xend = 1.1, y = (coef(mod)[1]) - 1), 
+               yend = coef(mod)[1], arrow = arrow(angle = 15, type = "closed"), 
+               color = 'darkred') + 
+  annotate('text', x = 3, y = (coef(mod)[1] - 1), label = "Slope = -5.34", 
+           size = 6, color = 'darkred') + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  stat_smooth(method = 'lm', se = F, color = 'darkblue', 
+              lwd = 2, fullrange = TRUE) + 
+  xlim(0, 6) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+
+```
+
+```{r, echo=FALSE, cache=FALSE, eval=TRUE}
+print(summary(mod)$coef, digits = 3)
+```
+
+]
+
+---
+
+# Understanding slopes and intercepts
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=14, fig.retina=2, cache=TRUE}
+library(lingStuff)
+lm_ex()
+```
+
+---
+
+# Same intercept, but different slopes
+
+.pull-left[
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=7, fig.retina=2, cache=TRUE}
+lm_ex(n = 100, slope = 10, intercept = 0, sigma = 0.5)
+```
+
+]
+
+.pull-right[
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=7, fig.retina=2, warning=FALSE, cache=TRUE}
+lm_ex(n = 100, slope = 1, intercept = 0, sigma = 0.5, 
+      custAxis = TRUE, xlim = c(-3, 2), ylim = c(-30, 23))
+```
+
+]
+
+---
+
+# Positive and negative slope
+
+.pull-left[
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=7, fig.retina=2, warning=FALSE, cache=TRUE}
+lm_ex(n = 300, slope = 10, intercept = 0, sigma = 2.5)
+```
+
+]
+
+.pull-right[
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=7, fig.retina=2, warning=FALSE, cache=TRUE}
+lm_ex(n = 300, slope = -10, intercept = 0, sigma = 2.5)
+```
+
+]
+
+---
+
+# Different intercepts, but same slopes
+
+.pull-left[
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=7, fig.retina=2, warning=FALSE, cache=TRUE}
+lm_ex(n = 300, slope = 1, intercept = 0, sigma = 2.5, 
+      custAxis = TRUE, xlim = c(-4, 4), ylim = c(-10, 30))
+```
+
+]
+
+.pull-right[
+
+```{r, echo=FALSE, cache=FALSE, fig.height=7, fig.width=7, fig.retina=2, warning=FALSE, cache=TRUE}
+lm_ex(n = 300, slope = 1, intercept = 20, sigma = 2.5, 
+      custAxis = TRUE, xlim = c(-4, 4), ylim = c(-10, 30))
+```
+
+]
+
+---
+
+# Making predictions
+
+- Recall the linear model equation...
+
+```{r, results='asis', echo=FALSE}
+cat(sprintf("$$y_i = \\beta_0 + \\beta_1 wt_i + \\epsilon_i$$"))
+```
+
+--
+
+- Our `mtcars` model can be summarized as...
+
+```{r, results='asis', echo=FALSE, eval=TRUE, cache=TRUE}
+b <- coef(mod)
+cat(sprintf("$$mpg = %.02f + %.02f wt$$", b[1], b[2]))
+```
+--
+
+- What is the predicted `mpg` for a car that weighs 1 unit?  
+And one that weighs 3? And 6?
+
+--
+
+  - `r round(coef(mod)[2] * 1 + coef(mod)[1], 2)` 
+  $mpg = 37.29 + -5.34 \times 1$
+
+  - `r round(coef(mod)[2] * 3 + coef(mod)[1], 2)` 
+  $mpg = 37.29 + -5.34 \times 3$
+
+  - `r round(coef(mod)[2] * 6 + coef(mod)[1], 2)` 
+  $mpg = 37.29 + -5.34 \times 6$
+
+---
+class: middle
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=13, fig.height=7, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_smooth(method = 'lm', se = F, color = 'white') + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  stat_smooth(method = "lm", fullrange = TRUE) + 
+  geom_segment(aes(x = 0, xend = 1, 
+               y = round(coef(mod)[2] * 1 + coef(mod)[1], 2), 
+               yend = round(coef(mod)[2] * 1 + coef(mod)[1], 2)), 
+               lwd = 1, lty = 3, color = "darkred") + 
+  geom_segment(aes(x = 0, xend = 3, 
+               y = round(coef(mod)[2] * 3 + coef(mod)[1], 2), 
+               yend = round(coef(mod)[2] * 3 + coef(mod)[1], 2)), 
+               lwd = 1, lty = 3, color = "darkred") + 
+  geom_segment(aes(x = 0, xend = 6, 
+               y = round(coef(mod)[2] * 6 + coef(mod)[1], 2), 
+               yend = round(coef(mod)[2] * 6 + coef(mod)[1], 2)), 
+               lwd = 1, lty = 3, color = "darkred") +   
+  scale_x_continuous(limits=c(0, 6.25), expand = c(0, 0)) +
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+
+# Factors
+
+- What about categorical variables (factors)?
+
+--
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=14, fig.height=6, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = as.numeric(cyl), y = mpg)) + 
+  geom_smooth(method = 'lm', se = F) + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  scale_x_continuous(breaks = c(4, 6, 8), labels = c("4-cyl", "6-cyl", "8-cyl")) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+
+```{r, eval=FALSE}
+lm(mpg ~ cyl, data = mtcars)
+```
+
+```{r, echo=FALSE, eval=TRUE, cache=TRUE}
+mod_2 <- lm(mpg ~ as.factor(cyl), data = mtcars)
+print(summary(mod_2)$coef, digits = 2)
+```
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=14, fig.height=6, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = as.numeric(cyl), y = mpg)) + 
+  geom_smooth(method = 'lm', se = F) + 
+  geom_point(size = 4) + 
+  geom_point(size = 3, color = 'lightblue') + 
+  scale_x_continuous(breaks = c(4, 6, 8), 
+                     labels = c("4-cyl", "6-cyl", "8-cyl")) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+
+```{r, eval=FALSE}
+lm(mpg ~ cyl, data = mtcars)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+print(summary(mod_2)$coef, digits = 2)
+```
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=14, fig.height=6, cache=TRUE, eval=TRUE}
+
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg, fill = as.factor(cyl))) + 
+  geom_smooth(method = 'lm', se = F, show.legend = FALSE) + 
+  geom_boxplot(show.legend = FALSE) + 
+  scale_x_discrete(breaks = c(4, 6, 8), 
+                     labels = c("4-cyl", "6-cyl", "8-cyl")) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+
+```{r, eval=FALSE}
+lm(mpg ~ cyl, data = mtcars)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+print(summary(mod_2)$coef, digits = 2)
+```
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=14, fig.height=6, cache=TRUE, eval=TRUE}
+
+mtcars %>%
+  group_by(., as.factor(cyl)) %>%
+  summarize(., mean = mean(mpg), std = sd(mpg)) %>%
+  select(., cyl = `as.factor(cyl)`, mean, std) %>%
+  ggplot(., aes(x = cyl, y = mean, fill = cyl, color = cyl)) + 
+  geom_errorbar(aes(ymin = mean - std, ymax = mean + std), 
+                width = 0.25, show.legend = FALSE) +
+  geom_segment(aes(x = 1, xend = 2, 
+               y = mean(mtcars[mtcars$cyl == 4, 'mpg']), 
+               yend = mean(mtcars[mtcars$cyl == 6, 'mpg'])), 
+               show.legend = FALSE, color = 'black') + 
+  geom_segment(aes(x = 2, xend = 3, 
+               y = mean(mtcars[mtcars$cyl == 6, 'mpg']), 
+               yend = mean(mtcars[mtcars$cyl == 8, 'mpg'])), 
+               show.legend = FALSE, color = 'black') + 
+  geom_point(show.legend = FALSE, color = 'black', size = 2) + 
+  scale_x_discrete(breaks = c(4, 6, 8), 
+                     labels = c("4-cyl", "6-cyl", "8-cyl")) + 
+  ylim(0, 35) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+
+```{r, eval=FALSE}
+lm(mpg ~ cyl, data = mtcars)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+print(summary(mod_2)$coef, digits = 2)
+```
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, fig.width=14, fig.height=6, cache=TRUE, eval=TRUE}
+
+mtcars %>%
+  group_by(., as.factor(cyl)) %>%
+  summarize(., mean = mean(mpg), std = sd(mpg)) %>%
+  select(., cyl = `as.factor(cyl)`, mean, std) %>%
+  ggplot(., aes(x = cyl, y = mean, fill = cyl)) + 
+  geom_bar(stat = 'identity', width = 0.5, show.legend = FALSE) +
+  geom_errorbar(aes(ymin = mean - std, ymax = mean + std), 
+                width = 0.25) +
+  geom_point(show.legend = FALSE, color = 'black', size = 2) + 
+  scale_x_discrete(breaks = c(4, 6, 8), 
+                     labels = c("4-cyl", "6-cyl", "8-cyl")) + 
+  ylim(0, 35) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+
+.pull-left[
+
+### Regression output
+
+```{r, eval=FALSE}
+lm(mpg ~ cyl, data = mtcars)
+```
+
+```{r, echo=FALSE, cache=TRUE, eval=TRUE}
+library(DT)
+datatable(summary(mod_2)$coef, options = list(dom = 't'), 
+              colnames = c('', 'Est.', 'SE', 'T', 'p')) %>%
+formatRound(columns = 1:5, digits = 2)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Means
+
+```{r, eval=FALSE}
+aggregate(mpg ~ cyl, FUN=mean, data=mtcars)
+```
+
+```{r, echo=FALSE, cache=FALSE, eval=TRUE}
+aggregate(mpg ~ cyl, FUN = mean, data = mtcars) %>%
+datatable(., options = list(dom = 't'), rownames = FALSE) %>%
+formatRound(columns = 1:5, digits = 2)
+```
+]
+
+
+</br></br></br></br>
+
+- Each simple effect is an independent samples t-test!
+- The baseline is compared to the other two levels of the factor
+- Notice that `6-cyl` is not compared to `8-cyl`
+- We would have to change the baseline to make that comparison
+
+---
+
+<div style="float:right">
+
+  </br>
+<ul>
+  <li>Now we have the 6-to-8 cyl comparison</li>
+  <li>Notice how the slopes have changed</li>  
+</ul>
+
+
+
+</div>
+
+
+```{r, cache=FALSE, eval=FALSE}
+# Relevel factor
+mtcars$cyl <- factor(mtcars$cyl, levels = c(6, 4, 8))
+
+# Refit data
+mod_3 <- lm(mpg ~ cyl, data = mtcars)
+print(summary(mod_3)$coef, digits = 3)
+```
+
+```{r, cache=TRUE, eval=TRUE, echo=FALSE}
+newcars <- mtcars
+# Relevel factor
+newcars$cyl <- factor(newcars$cyl, levels = c(6, 4, 8))
+
+# Refit data
+mod_3 <- lm(mpg ~ as.factor(cyl), data = newcars)
+print(summary(mod_3)$coef, digits = 3)
+```
+
+--
+
+```{r, message=FALSE, echo=FALSE, fig.retina=2, cache=FALSE, fig.width=14, fig.height=4, eval=TRUE}
+
+newcars %>%
+  group_by(., cyl) %>%
+  summarize(., mean = mean(mpg), std = sd(mpg)) %>%
+  select(., cyl = cyl, mean, std) %>%
+  ggplot(., aes(x = cyl, y = mean, fill = cyl, color = cyl)) + 
+  geom_errorbar(aes(ymin = mean - std, ymax = mean + std), 
+                width = 0.25, show.legend = FALSE) +
+  geom_segment(aes(x = 1, xend = 2, 
+               y = mean(newcars[newcars$cyl == 6, 'mpg']), 
+               yend = mean(newcars[newcars$cyl == 4, 'mpg'])), 
+               show.legend = FALSE, color = 'black') + 
+  geom_segment(aes(x = 2, xend = 3, 
+               y = mean(newcars[newcars$cyl == 4, 'mpg']), 
+               yend = mean(newcars[newcars$cyl == 8, 'mpg'])), 
+               show.legend = FALSE, color = 'black') + 
+  geom_point(show.legend = FALSE, color = 'black', size = 2) + 
+  scale_x_discrete(breaks = c(6, 4, 8), 
+                     labels = c("6-cyl", "4-cyl", "8-cyl")) + 
+  ylim(0, 35) + 
+  theme_bw(base_size = 20, base_family = 'Times')
+```
+
+---
+class: middle, center
+
+<iframe src="https://jvcasill.shinyapps.io/shiny_bivariate_regression/" style="border:none;" height="90%" width="100%"></iframe>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
