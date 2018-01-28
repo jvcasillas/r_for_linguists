@@ -1,0 +1,10 @@
+
+
+## Loading packages
+
+To load a package after you have installed it, use the `library()` 
+function. Try loading the ```tidyverse``` package.
+
+```{r, load-tidyverse, exercise=TRUE}
+
+```

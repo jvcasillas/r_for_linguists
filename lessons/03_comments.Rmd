@@ -1,0 +1,18 @@
+
+
+## Comments
+
+In R, anything that comes after \# is considered a comment. Comments are 
+important because they help you to remember what you did, why you did 
+it, etc. Add 2 + 2 and create a relevant comment:
+
+```{r, comment-code, exercise=TRUE}
+#############################
+# Always comment your code! #
+#############################
+
+# This is a comment
+2 + 2
+```
+
+

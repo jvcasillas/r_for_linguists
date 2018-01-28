@@ -1,60 +1,41 @@
 ---
-title: 'R for linguists'
-subtitle: ''
-date: "Last updated: `r format(Sys.time(), '%B %d %Y')`"
-output: 
-  html_document: 
-    df_print: tibble
-    theme: yeti
-    toc: yes
-    toc_float: yes
+title: "R for linguists"
+subtitle: "An introduction"
+date: "Last update: `r format(Sys.time(), '%D')`"
+output: learnr::tutorial
+runtime: shiny_prerendered
 ---
 
-```{r file-list, echo=FALSE}
-# Store all folders in 'notes' directory
-# Use regex to exclude anything with a '.' 
-# (this gets all folders and excludes files)
-folders <- dir(pattern = "^[^.]+$")
 
-# Store number of folders
-my_length <- length(folders)
-
-# Create empty character vector to hold paths 
-children <- vector("character", length = my_length)
-
-# For loop to store paths in 'children' vector 
-# Search only for .Rmd files 
-for (i in 1:length(folders)) {
-  
-  # List .Rmd files in each folder of 'folders'
-  # store output in 'children'
-  children[i] <- list.files(path = folders[i], 
-                            pattern = ".html", 
-                            full.names = TRUE)
-}
-
-# Print children to check folders and respective paths
-# print(children)
+```{r, echo=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache=FALSE, echo=FALSE)
+library(learnr)
 ```
 
-
-# Lessons
-
-```{r, create-links, results='asis', echo=FALSE}
-
-# Use for loop to create links to all html files
-for (file in 1:length(folders)) {
-  writeLines(paste0("- [", folders[file], "](", children[file], ")"))
-}
+```{r, child='./lessons/00_working_directories.Rmd'}
 ```
 
-# Links
+```{r, child='./lessons/01_install_packages.Rmd'}
+```
 
-- another list
-- goes here
+```{r, child='./lessons/02_load_packages.Rmd'}
+```
 
+```{r, child='./lessons/03_comments.Rmd'}
+```
 
+```{r, child='./lessons/04_r_as_a_calculator.Rmd'}
+```
 
+```{r, child='./lessons/05_assigning_variables.Rmd'}
+```
 
+```{r, child='./lessons/06_data_structures.Rmd'}
+```
 
+```{r, child='./lessons/07_dplyr.Rmd'}
+```
+
+```{r, child='./lessons/08_generate_a_report.Rmd'}
+```
 

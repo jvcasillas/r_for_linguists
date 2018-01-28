@@ -1,0 +1,17 @@
+
+
+## Assigning variables
+
+R uses objects. You must assign them using ```<-``` in order 
+to store them in memory. You can them call them by typing 
+the variable or calling ```print()```. Store the value '2' 
+to the object 'x'
+
+```{r, assignment, exercise=TRUE}
+
+x <- 2
+print(x)
+
+# Perform an operation on 'x'
+x + 4
+```

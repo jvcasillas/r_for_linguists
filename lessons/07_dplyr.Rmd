@@ -1,0 +1,149 @@
+
+## Manipulating dataframes with ```dplyr```
+
+There are some basic operations that we often have to use when working with 
+dataframes. The ```dplyr``` package (part of the ```tidyverse```) simplifies 
+this process (note: it is always good to learn how to get the same results 
+using base R). 
+
+
+### Properties
+
+- 1st arg. is a dataframe
+- remaining arguments describe what to do to the dataframe
+- no need for the `$` operator
+- Result is a new dataframe
+- data must be tidy for this to work
+
+### verbs
+
+- `select()`: return a subset of the columns of a data frame
+- `filter()`: extract a subset of rows from a dataframe based on logical conditions
+- `arrange()`: reorder rows of a dataframe
+- `rename()`: rename variables in a data frame
+- `mutate()`: add new variables/columns or transform existing variables
+- `summarise()`: generate summary statistics of different variables in the dataframe
+
+#### select()
+
+- Use to select columns
+- You can specify a range (i.e. `columnName:columnName`)
+- You can negate columns
+- Special functions that only work inside `select()`
+  - `starts_with(x, ignore.case = TRUE)`: names starts with `x`
+  - `ends_with(x, ignore.case = TRUE)`: names ends in `x`
+  - `contains(x, ignore.case = TRUE)`: selects all variables whose name contains `x`
+  - `matches(x, ignore.case = TRUE)`: selects all variables whose name matches the regular expression `x`
+  - `num_range("x", 1:5, width = 2)`: selects all variables (numerically) from x01 to x05.
+  - `one_of("x", "y", "z")`: selects variables provided in a character vector.
+  - `everything()`: selects all variables.
+
+```{r, eval=FALSE}
+select(df, columnName)
+select(df, -c(column1, column2))
+```
+
+```{r}
+library(dplyr)
+select(mtcars, -c(mpg, cyl))
+select(mtcars, -(mpg:cyl))
+select(mtcars, starts_with('c'))
+```
+
+#### filter()
+
+- Use to do basic subsetting/indexing in a dataframe
+- Use normal logical sequences
+	- `&`
+	- `|`
+	- `%in%`
+- Important subcommand
+  - `slice()`: use to select specific rows (i.e. `slice(15:30)`)
+
+```{r, eval=FALSE}
+filter(df, specifier)
+```
+
+```{r}
+filter(mtcars, cyl == 6 & disp > 100)
+filter(mtcars, cyl %in% c(4, 8))
+```
+
+#### arrange()
+
+- Use this to order the rows of a dataframe
+- Default is ascending
+- To descend use `desc()`
+
+```{r, eval=TRUE}
+arrange(mtcars, cyl)
+arrange(mtcars, desc(cyl))
+```
+
+#### rename()
+
+- Rename a variable
+- Give newname and then associate it with the old name
+
+```{r, eval=FALSE}
+rename(dataframe, newVar = oldVar)
+```
+
+```{r}
+rename(mtcars, cycle = cyl)
+```
+
+#### mutate()
+
+- transform existing variables
+- create new variables
+- Ex. center mpg in new cMPG variable
+
+```{r, eval=TRUE}
+mutate(mtcars, cMPG = mpg - mean(mpg))
+```
+
+#### group_by()
+
+- Group by categorical variables
+- Useful in conjunction with `summarize()`
+
+```{r, eval=TRUE}
+group_by(mtcars, cyl) %>%
+  mutate(cMPG = mpg - mean(mpg)) %>%
+  summarize(mean = mean(cMPG))
+```
+
+#### %>%
+
+You may have notices that the last code chunk was a little bit different. I used the infix operator `%>%` to link several commands together. This is called piping/chaining. The `%>%` operator can be read as "then". Thus, the following code...
+
+```{r, eval=FALSE}
+group_by(mtcars, cyl) %>%
+  mutate(cMPG = mpg - mean(mpg)) %>%
+  summarize(mean = mean(cMPG))
+```
+
+...can be read as: Group `mtcars` by the variable `cyl`, **then** center the variable mpg and place it in a new column, `cMPG`, **then** calculate the mean (for each level of `cyl`). This is extremely useful because it makes r code more readible and obviates the need to store a lot of variables in your computers memory. Let's see more examples of `%>%`.
+
+
+#### Joining functions
+
+- inner_join(x, y): gives new dataframe with columns from both x and y, but only includes rows that contain all columns (drops missing values)
+- left_join(x, y): gives all columns of x and y, but inserts missing values for y (if there are no values)
+- semi_join(x, y): gives all columns of x (no y added), but matches only the rows that match y
+- anti_join(x, y): gives all columns of x (no y added), but matches only the rows that don't match y
+
+|  Type |                  Action                  |
+| :---- | :--------------------------------------- |
+| inner | include only rows in **both** x and y    |
+| left  | include all of x, and matching rows of y |
+| semi  | include rows of x that match y           |
+| anti  | include rows of x that **don't** match y |
+
+
+
+
+
+
+

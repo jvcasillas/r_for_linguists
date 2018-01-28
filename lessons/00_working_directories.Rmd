@@ -1,0 +1,34 @@
+
+
+## Working directories
+
+### Overview
+
+Think of your computer as a house. Your house has different rooms and inside of 
+each room you have different objects. If you are in the bathroom, for example, 
+you have easy access to objects like the sink and the shampoo. At any given time 
+you can only be in one room, but you can easily go to another room if you want. 
+The room you are currently in is the programming equivalent of your working 
+directory. You have easy access to the files and folders inside your current 
+working directory. Importantly, your R session is always conducted from a 
+working directory. This can be the *desktop*, or anywhere you want. Whenever 
+you work in R it is important to know your current working directory. If you 
+are working on a project, the root project folder should be your working 
+directory so that you have easy access to the relavant files.
+
+### How?
+
+You can check the current working directory using `getwd()`. You can set the 
+working directory of your R session using the `setwd()` function. Alternatively, 
+you can also set the working directory manually in RStudio (Session > Set 
+Working Directory). 
+
+### Tips
+
+In order to make reproducible documents, especially if you are collaborating 
+with others, it is important to set the working directory in an automatic 
+fashion that will not cause problems for others who try to use your code. The 
+best way to acheive this is to use RStudio projects. When you open a projec 
+it is automatically set as the working directory. A collaborator could download 
+your project to any directory of their computer and still execute the code 
+without any issues.
