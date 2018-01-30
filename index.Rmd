@@ -1,10 +1,36 @@
 ---
 title: "R for linguists"
 subtitle: "An introduction"
+author: "Joseph V. Casillas</br>Rutgers University"
 date: "Last update: `r format(Sys.time(), '%D')`"
-output: learnr::tutorial
+output: 
+  learnr::tutorial:
+    highlight: textmate
+    theme: yeti
 runtime: shiny_prerendered
 ---
+
+
+<style>
+  /* styles for hidden solutions */
+  .answer {
+    height: 3em;
+    overflow-y: hidden;
+    padding: 0.5em;
+  }
+  .answer.open { 
+    height: auto; 
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+  .answer button {
+    height: 2em;
+    margin-bottom: 1.5em;
+  }
+  .answer pre.sourceCode {
+    border-color: green;
+  }
+</style>
 
 
 ```{r, echo=FALSE, cache=FALSE}
@@ -12,30 +38,51 @@ knitr::opts_chunk$set(cache=FALSE, echo=FALSE)
 library(learnr)
 ```
 
-```{r, child='./lessons/00_working_directories.Rmd'}
+```{r, child='./lessons/00_intro.Rmd'}
 ```
 
-```{r, child='./lessons/01_install_packages.Rmd'}
+```{r, child='./lessons/01_working_directories.Rmd'}
 ```
 
-```{r, child='./lessons/02_load_packages.Rmd'}
+```{r, child='./lessons/02_install_packages.Rmd'}
 ```
 
-```{r, child='./lessons/03_comments.Rmd'}
+```{r, child='./lessons/03_load_packages.Rmd'}
 ```
 
-```{r, child='./lessons/04_r_as_a_calculator.Rmd'}
+```{r, child='./lessons/04_comments.Rmd'}
 ```
 
-```{r, child='./lessons/05_assigning_variables.Rmd'}
+```{r, child='./lessons/05_r_as_a_calculator.Rmd'}
 ```
 
-```{r, child='./lessons/06_data_structures.Rmd'}
+```{r, child='./lessons/06_assigning_variables.Rmd'}
 ```
 
-```{r, child='./lessons/07_dplyr.Rmd'}
+```{r, child='./lessons/07_data_structures.Rmd'}
 ```
 
-```{r, child='./lessons/08_generate_a_report.Rmd'}
+```{r, child='./lessons/08_dplyr.Rmd'}
 ```
 
+```{r, child='./lessons/09_generate_a_report.Rmd'}
+```
+
+
+
+
+<script>
+  window.onload = function(){
+    var buttons = document.getElementsByTagName("button");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].onclick = function() {
+        var cl = this.parentElement.classList;
+        if (cl.contains('open')) {
+          cl.remove("open");
+        } else {
+          cl.add("open");
+        }
+      }
+    }
+  }
+</script>
