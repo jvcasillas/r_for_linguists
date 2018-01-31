@@ -1,0 +1,20 @@
+
+## R as a calculator
+
+This isn't incredibly useful, but it gives you an idea of how R works. 
+Try some simple math:
+
+```{r, r-calculator1, exercise=TRUE}
+2 + 2
+```
+
+```{r, r-calculator2, exercise=TRUE}
+4^2
+```
+
+```{r, r-calculator3, exercise=TRUE}
+(12 * 15) / 2
+```
+
+
+
