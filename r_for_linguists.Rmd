@@ -6,36 +6,18 @@ date: "Last update: `r format(Sys.time(), '%D')`"
 output: 
   learnr::tutorial:
     highlight: textmate
-    theme: yeti
+    theme: united
 runtime: shiny_prerendered
 ---
-
-
-<style>
-  /* styles for hidden solutions */
-  .answer {
-    height: 3em;
-    overflow-y: hidden;
-    padding: 0.5em;
-  }
-  .answer.open { 
-    height: auto; 
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-  }
-  .answer button {
-    height: 2em;
-    margin-bottom: 1.5em;
-  }
-  .answer pre.sourceCode {
-    border-color: green;
-  }
-</style>
-
 
 ```{r, echo=FALSE, cache=FALSE}
 knitr::opts_chunk$set(cache=FALSE, echo=FALSE)
 library(learnr)
+```
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
 ```
 
 ```{r, child='./lessons/00_intro.Rmd'}
@@ -69,20 +51,3 @@ library(learnr)
 ```
 
 
-
-
-<script>
-  window.onload = function(){
-    var buttons = document.getElementsByTagName("button");
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].onclick = function() {
-        var cl = this.parentElement.classList;
-        if (cl.contains('open')) {
-          cl.remove("open");
-        } else {
-          cl.add("open");
-        }
-      }
-    }
-  }
-</script>
