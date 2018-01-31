@@ -8,7 +8,7 @@ To get the most out of these exercises, run the code in the ```You try...```
 sections from your browser. Complete the questions and check your answers using 
 the ```Hint``` and ```Solutions``` boxes. 
 
-This is a work in process. If you have questions, comments, or find any errors 
+This is a work in progress. If you have questions, comments, or find any errors 
 you can [contact me][email] or submit a [pull request][github]. Click 
 'Next Topic' to continue. 
 
