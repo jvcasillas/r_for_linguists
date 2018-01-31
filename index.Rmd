@@ -1,44 +1,13 @@
 ---
+title: "R for linguists"
+subtitle: "An introduction"
+author: "Joseph V. Casillas</br>Rutgers University"
+date: "Last update: `r format(Sys.time(), '%D')`"
 output: html_document
 ---
 
-```{r file-list}
-# Store all folders in 'notes' directory
-# Use regex to exclude anything with a '.' 
-# (this gets all folders and excludes files)
-folders <- dir(pattern = "^[^.]+$")
 
-# Store number of folders
-my_length <- length(folders)
+[r_for_linguists](https://jvcasill.shinyapps.io/r_for_linguists/)
 
-# Create empty character vector to hold paths 
-children <- vector("character", length = my_length)
-
-# For loop to store paths in 'children' vector 
-# Search only for .Rmd files 
-for (i in 1:length(folders)) {
-  
-  # List .Rmd files in each folder of 'folders'
-  # store output in 'children'
-  children[i] <- list.files(path = folders[i], 
-                            pattern = ".html", 
-                            full.names = TRUE)
-}
-
-# Print children to check folders and respective paths
-# print(children)
-```
-
-
-```{r, create-links, results='asis'}
-
-# Use for loop to create links to all html files
-for (file in 1:length(folders)) {
-  writeLines(paste0("- [", folders[file], "](", children[file], ")"))
-}
-```
-
-
-
-
+<meta http-equiv="refresh" content="0; url='https://jvcasill.shinyapps.io/r_for_linguists/'"/>
 

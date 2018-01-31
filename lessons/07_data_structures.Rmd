@@ -1,0 +1,138 @@
+
+## Data structures
+
+### Overview
+
+There are four fundamental data structures used in R that we will discuss here: 
+
+- vectors
+- matrices
+- dataframes
+- lists
+
+### Vectors
+
+The most important data structure in R, in my opinion, is the **vector**. A 
+vector is a series of numbers, integers, characters or logicals. The key is 
+that all of the members of the vector have to be of the same type. 
+
+```{r, vectors}
+x <- c(1, 2, 3)
+y <- c(4, 5, 6)
+z <- c('a', 'b', 'c')
+```
+
+```{r, vectors1, exercise=TRUE}
+# 3 vectos: x, y, and z
+x <- c(1, 2, 3)
+y <- c(4, 5, 6)
+z <- c('a', 'b', 'c')
+
+# We can use the print function to see the vectors in the console
+print(x)
+print(y)
+print(z)
+
+```
+
+We can perform operations on vectors. 
+
+```{r, vectors2, exercise=TRUE, exercise.setup = "vectors"}
+x + 1 
+```
+
+If we have two vectors of the same class we can do vectorized math
+
+```{r, vectors3, exercise=TRUE, exercise.setup = "vectors"}
+x + y
+```
+
+Create your own vector and perform an operation on it (note: this will only work 
+if both vector are of the same type): 
+
+```{r, vectors4, exercise=TRUE}
+
+```
+
+```{r, vectors4-hint-1}
+# Create numeric vector and assign it to the object "my_vec"
+```
+
+```{r, vectors4-hint-2}
+# Perform an operation on 'my_vec' (for example x^2)
+```
+
+```{r, vectors4-hint-3}
+# For fun create a character vector (call it 'my_chars') and add the values 
+# of 'my_vec' to 'my_chars'. This gives an error. Why?
+```
+
+```{r, vectors4-hint-4}
+# In the same vein that vectors must all be of the same class, we can only 
+# perform operations on vectors of the same class.
+```
+
+</br>
+
+### Matrices 
+
+A matrix is a 2d vector. You probably will not use them very often, so I will 
+not say much about them.
+
+```{r, matrices, exercise=TRUE}
+# Matrices = 2d vectors
+matrix(1:10, nrow = 5, ncol = 2)
+
+```
+
+</br>
+
+
+### Dataframes
+
+Dataframes are 2d matrices with column and row names. ```IMPORTANT```: a column 
+in a dataframe is like a vector, each column can be of a different type 
+(factor, numeric, etc.). This is the closest equivalent to an excel sheet. You 
+will probably spend most of your time in R working with dataframes.
+
+
+```{r, dataframes}
+mtcars <- select(mtcars, 1:4)
+```
+
+Let's look at few dataframes. The ```head()``` function shows 
+the 1st six rows of a dataframe and the ```tail()``` function shows the final 
+six rows. Get the first six rows of ```mtcars```
+
+```{r, dataframes1, exercise=TRUE, exercise.setup='dataframes'}
+# Get first 6 rows of mtcars
+
+```
+
+```{r, dataframes1-solution}
+head(mtcars)
+```
+
+Now print the last 6 rows of ```USArrests```. 
+
+```{r, dataframes2, exercise=TRUE}
+# Get last 6 rows of USArrests
+
+```
+
+```{r, dataframes2-solution}
+tail(USArrests)
+```
+
+We can get more information about a dataframe using the ```str()``` and 
+```summary()``` functions. Try them below on the ```ToothGrowth``` dataset.
+
+```{r, dataframes3, exercise=TRUE}
+
+```
+
+```{r, dataframes3-solution}
+str(ToothGrowth)
+summary(ToothGrowth)
+```
+

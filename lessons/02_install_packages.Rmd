@@ -1,0 +1,8 @@
+## Install packages
+
+Packages can be installed from RStudio using the 'Packages' tab 
+(normally in the bottom right window). Search for the package you want 
+and hit `enter`. You can *manually* install packages from the console 
+using the `install.packages()` function. Ex. 
+`install.packages('devtools')`.
+

@@ -1,0 +1,51 @@
+## Assigning variables
+
+R uses objects. You must assign them using ```<-``` in order to store them in 
+memory. You can them call them by typing the variable or calling ```print()```. 
+Store the value '2' to the object 'x'
+
+
+```{r, assignment}
+x <- 2
+```
+
+```{r, assignment1, exercise=TRUE}
+x <- 2
+print(x)
+```
+
+You can now perform an operation on 'x'.
+
+```{r, assignment2, exercise=TRUE, exercise.setup = "assignment"}
+x + 4
+```
+
+Try one of your own
+
+```{r, assignment3, exercise=TRUE, exercise.setup = "assignment"}
+
+```
+
+```{r, assignment3-hint}
+# Type in the variable 'x' and then add, subtract, multiple or divide it by 
+# another number
+```
+
+If you assign another value to 'x', then the new value replaces the old one. 
+Set 'x' to 30 and calculate the square root. 
+
+```{r, assignment4, exercise=TRUE}
+
+```
+
+```{r, assignment4-hint-1}
+# Remember that ```<-``` is the assignment operator  
+# Use ```sqrt()``` to calculate the square root
+```
+
+
+
+```{r, assignment4-hint-2}
+x <- 30
+sqrt(x)
+```

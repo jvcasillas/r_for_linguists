@@ -1,0 +1,13 @@
+name: r_for_linguists
+title:
+username:
+account: jvcasill
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 261247
+bundleId: 1200444
+url: https://jvcasill.shinyapps.io/r_for_linguists/
+when: 1517375837.06025
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: index.html|index.Rmd|README.md|hold
