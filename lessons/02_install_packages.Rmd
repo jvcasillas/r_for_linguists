@@ -1,8 +1,32 @@
 ## Install packages
 
-Packages can be installed from RStudio using the 'Packages' tab 
-(normally in the bottom right window). Search for the package you want 
-and hit `enter`. You can *manually* install packages from the console 
-using the `install.packages()` function. Ex. 
-`install.packages('devtools')`.
+### From CRAN
+
+Packages can be installed from RStudio using the 'Packages' tab (normally in 
+the bottom right window). Search for the package you want and hit `enter`. You 
+can *manually* install packages from the console using the `install.packages()` 
+function. 
+
+```{r, 'install_cran', eval=FALSE, echo=TRUE}
+install.packages('devtools')
+```
+
+### From GitHub
+
+You can also install a package from GitHub. Often times these are packages in 
+active development (before they are put on CRAN). In order to install a 
+package from GitHub you need to know the name of the user and the name of the 
+repo. For example, in this tutorial we will use the [lingStuff][lingStuff] 
+package. It can be install using the following code: 
+
+```{r, 'install_github', eval=FALSE, echo=TRUE}
+library(devtools)
+install_github(repo = "lingStuff", username = "jvcasillas")
+```
+
+### From other sources
+
+It is also possible to install packages from other sources (i.e., Bitbucket). 
+See the ```devtools``` documentation for more information. 
+
 

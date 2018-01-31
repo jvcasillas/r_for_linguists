@@ -5,7 +5,7 @@ author: "Joseph V. Casillas</br>Rutgers University"
 date: "Last update: `r format(Sys.time(), '%D')`"
 output: 
   learnr::tutorial:
-    highlight: textmate
+    highlight: tango
     theme: united
 runtime: shiny_prerendered
 ---
@@ -18,6 +18,7 @@ library(learnr)
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(lingStuff)
 ```
 
 ```{r, child='./lessons/00_intro.Rmd'}
@@ -51,3 +52,8 @@ library(tidyverse)
 ```
 
 
+<!-- links -->
+
+[lingStuff]: http://www.jvcasillas.com/lingStuff/index.html
+[tidyverse]: https://www.tidyverse.org
+[GitHub_lingStuff]: https://github.com/jvcasillas/lingStuff

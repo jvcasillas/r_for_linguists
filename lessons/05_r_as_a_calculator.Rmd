@@ -1,20 +1,43 @@
-
 ## R as a calculator
 
-This isn't incredibly useful, but it gives you an idea of how R works. 
+Initially, this might not seem incredibly useful, but using R as a calculator 
+gives you feel for how it works, and can be helpful later on if you need to 
+perform some type of transformation on your data. 
+
 Try some simple math:
+
+Addition: 
 
 ```{r, r-calculator1, exercise=TRUE}
 2 + 2
 ```
 
+</br>
+
+Square a value: 
+
 ```{r, r-calculator2, exercise=TRUE}
 4^2
 ```
+
+</br>
+
+Order of operations: 
 
 ```{r, r-calculator3, exercise=TRUE}
 (12 * 15) / 2
 ```
 
+Calculate a z-score: 
+
+- raw score = 40
+- pop. mean = 48
+- pop. sd = 4.8
+
+```{r, r-calculator4, exercise=TRUE}
+# (x-bar - pop. mean) / pop. sd
+(40 - 48) / 4.8
+
+```
 
 

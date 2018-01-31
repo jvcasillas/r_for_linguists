@@ -35,17 +35,23 @@ print(z)
 
 ```
 
+</br>
+
 We can perform operations on vectors. 
 
 ```{r, vectors2, exercise=TRUE, exercise.setup = "vectors"}
 x + 1 
 ```
 
+</br>
+
 If we have two vectors of the same class we can do vectorized math
 
 ```{r, vectors3, exercise=TRUE, exercise.setup = "vectors"}
 x + y
 ```
+
+</br>
 
 Create your own vector and perform an operation on it (note: this will only work 
 if both vector are of the same type): 
@@ -100,6 +106,8 @@ will probably spend most of your time in R working with dataframes.
 mtcars <- select(mtcars, 1:4)
 ```
 
+</br>
+
 Let's look at few dataframes. The ```head()``` function shows 
 the 1st six rows of a dataframe and the ```tail()``` function shows the final 
 six rows. Get the first six rows of ```mtcars```
@@ -113,6 +121,8 @@ six rows. Get the first six rows of ```mtcars```
 head(mtcars)
 ```
 
+</br>
+
 Now print the last 6 rows of ```USArrests```. 
 
 ```{r, dataframes2, exercise=TRUE}
@@ -123,6 +133,8 @@ Now print the last 6 rows of ```USArrests```.
 ```{r, dataframes2-solution}
 tail(USArrests)
 ```
+
+</br>
 
 We can get more information about a dataframe using the ```str()``` and 
 ```summary()``` functions. Try them below on the ```ToothGrowth``` dataset.

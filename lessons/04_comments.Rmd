@@ -1,10 +1,11 @@
-
-
 ## Comments
 
-In R, anything that comes after \# is considered a comment. Comments are 
-important because they help you to remember what you did, why you did 
-it, etc. Add 2 + 2 and create a relevant comment:
+In R, anything that comes after a hashtag (or pound, \#) is considered a 
+comment. Comments are important because they help you to remember what you did, 
+why you did it, etc. You should think of adding comments as a way for you to 
+leave little notes to future you and others that will help you/them to 
+understand your workflow. Here is a trivial example with some simple math a 
+few comments. 
 
 ```{r, comment-code, exercise=TRUE}
 #############################
@@ -14,5 +15,43 @@ it, etc. Add 2 + 2 and create a relevant comment:
 # This is a comment
 2 + 2
 ```
+
+</br>
+
+It is good practice to also use comments to separate important sections of your 
+script. In the example below, I separate important setup code from the 
+descriptive statistics, with explanations of what I am doing before each 
+function call. 
+
+```{r, 'comment_sections', eval=FALSE, echo=TRUE}
+# Setup ------------------------------------------------------------------
+
+# Load packages
+library(tidyverse)
+library(lingStuff)
+
+# Load data
+important_data <- read_csv("./data/my_data.csv")
+
+# Check structure
+skimr::skim(important_data)
+
+
+
+# Descriptives -----------------------------------------------------------
+
+# Get summary stats
+summary(important_data)
+
+# Calculate means and SD
+important_data %>% 
+  group_by(., var1) %>% 
+  summarise(., var2_mean = mean(var2), var2_sd = sd(var2))
+
+```
+
+</br>
+
+You will always be thankful when you receive well commented code!
 
 

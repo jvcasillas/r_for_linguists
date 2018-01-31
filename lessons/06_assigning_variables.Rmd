@@ -1,9 +1,11 @@
 ## Assigning variables
 
-R uses objects. You must assign them using ```<-``` in order to store them in 
-memory. You can them call them by typing the variable or calling ```print()```. 
-Store the value '2' to the object 'x'
+R uses objects. You must assign them using the assignment operator, ```<-```, 
+in order to store them in memory. You can then call an object by typing its 
+assigned name or using ```print()```. 
 
+
+Store the value '2' to the object 'x'
 
 ```{r, assignment}
 x <- 2
@@ -14,11 +16,15 @@ x <- 2
 print(x)
 ```
 
+</br>
+
 You can now perform an operation on 'x'.
 
 ```{r, assignment2, exercise=TRUE, exercise.setup = "assignment"}
 x + 4
 ```
+
+</br>
 
 Try one of your own
 
@@ -43,9 +49,45 @@ Set 'x' to 30 and calculate the square root.
 # Use ```sqrt()``` to calculate the square root
 ```
 
-
-
 ```{r, assignment4-hint-2}
 x <- 30
 sqrt(x)
 ```
+
+You can assign almost anything to an object. In the next example, assign some 
+values to the objects I have given you and then use them to calculate a z-score.
+
+```{r, assignment5, exercise=TRUE}
+# enter values
+my_score  <- 
+class_avg <- 
+class_sd  <- 
+
+# calculate z-score (score - mean / sd)
+my_z_score <- 
+
+# print value
+print(my_z_score)
+```
+
+
+```{r, assignment5-hint-1}
+# enter values
+my_score  <- 52.7
+class_avg <- 48
+class_sd  <- 10
+```
+
+```{r, assignment5-hint-2}
+# enter values
+my_score  <- 52.7
+class_avg <- 48
+class_sd  <- 10
+
+# calculate z-score (score - mean / sd)
+my_z_score <- (my_score - class_avg) / class_sd
+
+# print value
+print(my_z_score)
+```
+

@@ -6,7 +6,6 @@ dataframes. The ```dplyr``` package (part of the ```tidyverse```) simplifies
 this process (note: it is always good to learn how to get the same results 
 using base R). First, load the ```dplyr``` package.
 
-</br>
 
 
 
@@ -23,7 +22,6 @@ For all of the ```dplyr``` verbs the following is true:
 - No need for the `$` operator
 - Result is a new dataframe
 
-</br>
 
 
 
@@ -69,6 +67,8 @@ select(df, columnName)
 select(df, -c(column1, column2))
 ```
 
+</br>
+
 **You try...**
 
 1. Select the columns 'mpg' and 'cyl'
@@ -79,6 +79,8 @@ select(mtcars, mpg, cyl)
 
 ```
 
+</br>
+
 2. Select all columns except those ranging from 'mpg' to 'cyl'
 
 ```{r, 'select2', exercise=TRUE}
@@ -86,6 +88,8 @@ select(mtcars, mpg, cyl)
 select(mtcars, -(mpg:cyl))  
 
 ```
+
+</br>
 
 3. Select all columns starting with 'c'
 
@@ -97,6 +101,8 @@ select(mtcars, -(mpg:cyl))
 ```{r, 'select3-solution'}
 select(mtcars, starts_with('c')) 
 ```
+
+</br>
 
 4. Select only the 'mpg' column
 
@@ -138,6 +144,8 @@ select(mtcars, mpg)
 filter(df, bolean)
 ```
 
+</br>
+
 **You try...**
 
 1. Filter rows in which 'cyl' equals 6 and 'disp' is greater than 100
@@ -151,6 +159,8 @@ filter(df, bolean)
 filter(mtcars, cyl == 6 & disp > 100) 
 ```
 
+</br>
+
 2. Filter rowns in which 'cyl' is either 4 or 8
 
 ```{r, 'filter2', exercise=TRUE}
@@ -162,6 +172,7 @@ filter(mtcars, cyl == 6 & disp > 100)
 filter(mtcars, cyl %in% c(4, 8))
 ```
 
+</br>
 
 3. Filter the rows of ```mtcars``` in which 'cyl' is equal to 8 and 'mpg' is 
 less than to 15. 
@@ -188,13 +199,18 @@ filter(mtcars, cyl == 8 & mpg < 15)
 - Default is ascending
 - To descend use `desc()`
 
-You try...
+**You try...**
+
+1. Arrange by cyl from low to high
 
 ```{r, 'arrange1', exercise=TRUE}
 # Arrange by cyl from low to high
 arrange(mtcars, cyl)
 ```
 
+</br>
+
+2. Arrange by cyl from high to low
 
 ```{r, 'arrange2', exercise=TRUE}
 # Arrange by cyl from high to low
@@ -218,6 +234,8 @@ arrange(mtcars, desc(cyl))
 rename(dataframe, newVar = oldVar)
 ```
 
+</br>
+
 **You try...**
 
 1. Rename 'cyl' to 'cycle'
@@ -227,6 +245,7 @@ rename(dataframe, newVar = oldVar)
 rename(mtcars, cycle = cyl)
 ```
 
+</br>
 
 2. Rename 'cyl' to 'CYL' and 'mpg' to 'miles_per_gallon'
 
@@ -253,8 +272,7 @@ rename(mtcars, CYL = cyl, miles_per_gallon = mpg)
 - The ```mutate()``` function is used to transform existing variables
 - It can also be used to reate new variables
 
-You try...
-
+**You try...**
 
 ```{r, mutate}
 mtcars <- select(mtcars, mpg)
@@ -268,6 +286,8 @@ mtcars <- select(mtcars, mpg)
 mutate(mtcars, mpg_c = mpg - mean(mpg))
 ```
 
+</br>
+
 2. Standardize the 'mpg' variable and put it in a new column called 'mpg_std'
 
 
@@ -275,7 +295,6 @@ mutate(mtcars, mpg_c = mpg - mean(mpg))
 # Standardize the 'mpg' variable and put it in a new column called 'mpg_std'
 
 ```
-
 
 ```{r, 'mutate2-hint-1'}
 mutate(mtcars, mpg_std = (mpg - mean(mpg)) / sd(mpg))
@@ -298,7 +317,7 @@ mutate(mtcars, mpg_std = (mpg - mean(mpg)) / sd(mpg))
 - Group by categorical variables
 - Useful in conjunction with `summarize()`
 
-You try...
+**You try...**
 
 1. Calculate the mean of 'mpg' for each level of 'cyl'
 
@@ -308,13 +327,14 @@ group_by(mtcars, cyl) %>%
   summarize(., mean_mpg = mean(mpg))
 ```
 
+</br>
+
 2. Calculate the the mean 'disp' for each level of 'vs'. 
 
 ```{r, 'group_by2', exercise=TRUE}
 # Calculate the the mean 'disp' for each level of 'vs'
 
 ```
-
 
 ```{r, 'group_by2-solution'}
 group_by(mtcars, vs) %>% 
@@ -346,6 +366,8 @@ variable `mpg` and place it in a new column, `cMPG`, **then** calculate the mean
 (for each level of `cyl`). This is extremely useful because it makes r code more 
 readible and obviates the need to store a lot of variables in your computers 
 memory. Let's see more examples of `%>%`.
+
+</br>
 
 1. Select the 'mpg', 'disp', and 'vs' columns, group by 'vs', standardize both 
 variables and then calculate the mean and standard deviation (they should each 

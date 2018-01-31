@@ -2,13 +2,23 @@
 
 ## Loading packages
 
-To load a package after you have installed it, use the `library()` 
-function. Try loading the ```tidyverse``` package.
+To load a package after you have installed it, use the `library()` function. 
+In this tutorial we will use the [tidyverse][tidyverse] package.
 
-```{r, 'load_tidyverse', exercise=TRUE}
-
+```{r, 'load_tidyverse', echo=TRUE, eval=FALSE}
+# Load tidyverse
+library(tidyverse)
 ```
 
-```{r, 'load_tidyverse-hint'}
-# library(tidyverse)
+</br>
+
+We will also use the [lingStuff][lingStuff] package, which is available on 
+[GitHub][GitHub_lingStuff]. 
+
+```{r, 'load_lingStuff', echo=TRUE, eval=FALSE}
+# Load lingStuff
+library(lingStuff)
 ```
+
+
+
