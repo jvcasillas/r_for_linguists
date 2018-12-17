@@ -21,7 +21,7 @@ package. It can be install using the following code:
 
 ```{r, 'install_github', eval=FALSE, echo=TRUE}
 library(devtools)
-install_github(repo = "lingStuff", username = "jvcasillas")
+install_github("jvcasillas/lingStuff")
 ```
 
 ### From other sources

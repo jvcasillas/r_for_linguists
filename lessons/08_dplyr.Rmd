@@ -1,16 +1,12 @@
 
 ## Manipulating dataframes with ```dplyr```
 
+### Overview
+
 There are some basic operations that we often have to use when working with 
-dataframes. The ```dplyr``` package (part of the ```tidyverse```) simplifies 
-this process (note: it is always good to learn how to get the same results 
-using base R). First, load the ```dplyr``` package.
-
-
-
-
-
-
+dataframes, such as subsetting and creating new variables. The ```dplyr``` 
+package (part of the ```tidyverse```) simplifies this process (note: it is 
+always good to learn how to get the same results using base R). 
 
 
 ### Properties

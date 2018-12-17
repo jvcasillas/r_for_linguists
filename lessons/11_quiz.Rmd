@@ -1,0 +1,57 @@
+## Putting it all together
+
+DO this quiz
+
+
+
+
+
+
+# Practice
+# 1. Using the mtcars data set, select 'hp' and 'disp', and gather them 
+#    into a tidy dataframe. You will need to think of names for the new 
+#    grouping variable and the continuous variable. Next, pipe into ggplot 
+#    and create a boxplot. 
+
+mtcars %>% 
+  select(., hp, disp) %>% 
+  gather(., key = metric, val = val) %>% 
+  ggplot(., aes(x = metric, y = val)) + 
+    geom_boxplot()
+
+# 2. Using the 'iris' dataset, select all columns except 'Sepal.Length' and 
+#    'Sepal.Width'. Create a tidy dataset with the remaining variables and 
+#    plot the continuous variable as a funtion of all grouping variables. 
+#    HINT: think about the grouping variables first. How many are there? What 
+#    should they be called? What is the most appropriate plot?
+
+iris %>% 
+  select(., -Sepal.Length, -Sepal.Width) %>% 
+  gather(., measurement, val, -Species) %>% 
+  ggplot(., aes(x = Species, y = val, color = measurement)) + 
+    stat_summary(fun.data = mean_sdl, geom = "pointrange")
+
+# 3. Using the 'iris' dataset again, select the 'Species', 'Petal.Length', and 
+#    'Petal.Width' columns, filter out all Species except 'setosa', and create a 
+#    scatterplot. Fit a 
+#    line through the data. Is there a relationship? After eyeballing the plot 
+#    calculate the Pearson's correlation coefficient. Is there a correlation? 
+#    In what direction? Conduct a test of independence (test the null hypothesis 
+#    that r is equal to 0). Bonus points if you can do it by hand.
+
+iris_subset <- iris %>% 
+  select(., Species, Petal.Length, Petal.Width) %>% 
+  filter(., Species == 'setosa') %>% 
+  mutate(., z_length = (Petal.Length - mean(Petal.Length)) / sd(Petal.Length), 
+            z_width = (Petal.Width - mean(Petal.Width)) / sd(Petal.Width), 
+            zl_zw = z_length * z_width)
+
+iris_subset %>%
+  ggplot(., aes(x = z_length, y = z_width)) + 
+    geom_point() + 
+    geom_smooth(method = 'lm')
+
+sum(iris_subset$zl_zw) / (nrow(iris_subset) - 1)
+cor(iris_subset$Petal.Length, iris_subset$Petal.Width)
+cor.test(iris_subset$Petal.Length, iris_subset$Petal.Width)
+
