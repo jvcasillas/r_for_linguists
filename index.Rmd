@@ -7,7 +7,7 @@ output: html_document
 ---
 
 
-[r_for_linguists](https://jvcasill.shinyapps.io/r_for_linguists/)
+[r_for_linguists](https://jvcasillas.shinyapps.io/r_for_linguists/)
 
-<meta http-equiv="refresh" content="0; url='https://jvcasill.shinyapps.io/r_for_linguists/'"/>
+<meta http-equiv="refresh" content="0; url='https://jvcasillas.shinyapps.io/r_for_linguists/'"/>
 
